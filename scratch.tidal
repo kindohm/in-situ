@@ -16,3 +16,26 @@ d3
 
 asap $ s "pattonfull"
 
+
+d1 
+  $ (|* gain 1.2) 
+  $ slow 1
+  $ stack [note 0 # midichan 14, ccn 1 # ccv (range 0 127 $ slow 3313 rand) # midichan 14,
+  (0.5 ~>) $ note 0 # midichan 13, ccn 1 # ccv (range 0 127 $ slow 13313 rand) # midichan 13 ] 
+  # s "midi" # cps 1
+
+  hush
+
+do 
+  let plies = 10 
+      pat = "<1 1.5 1 2 0.75 1>"
+  d1
+    $ (|* gain 1.2)
+    $ stack [
+      slow 8 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad1
+      , slow 7.23234 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad2
+      , someCyclesBy 0.3 rev $ plyWith ((plies/) $ pat) (|* gain 0.95) $ randcat [pad3, pad4, pad7, pad8] 
+      , plyWith ((plies/) $ pat) ((# pad11) . (|* gain 0.95)) $ pad12
+    ] # s "midi" # cps pat
+
+hush

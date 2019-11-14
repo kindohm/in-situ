@@ -1,0 +1,12 @@
+do 
+  let plies = "<10>" 
+      pat = "<1 1.5 1 2 0.75 1>"
+  d1
+    $ cpsDisc 1 1
+    $ (|* gain 1.2)
+    $ stack [
+      slow 8 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad1
+      , slow 7.23234 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad2
+      , g $ someCyclesBy 0.3 rev $ plyWith ((plies/) $ pat) (|* gain 0.95) $ randcat [pad3, pad4, pad7, pad8] 
+      , g $ plyWith ((plies/) $ pat) ((# pad11) . (|* gain 0.95)) $ pad12
+    ] # s "midi" # cps pat
