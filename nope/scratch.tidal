@@ -1,0 +1,23 @@
+-- ambient info
+C5
+A#4
+G5
+D6
+
+A&B mix
+A&B harmonizer mixes
+X, Y, & Z
+
+
+
+
+do 
+  let pat = "<5 2 4 2 1>"
+  d1 
+    $ (# cps (pat * 0.5 * (discretise 1 $ range 0.25 1 $ slow 3 rand) ))
+    $ superimpose ((# midichan "[2,10]") . (# note "-24") )
+    $ plyWith "<10 15 7 20>" (|* legato 1) $ s "midi" # note "0"
+    # midichan 15 
+    # legato 0.9
+
+    hush

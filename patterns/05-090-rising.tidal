@@ -1,0 +1,17 @@
+
+
+do 
+  let hatPlies = (slow 2 $ "<3 4 5 7>") :: Pattern (Ratio Integer)
+      denom = 4
+  d1 
+    $ (|* gain 1.2)
+    $ someCyclesBy 0.5 (within (0.625, 1) (const $ midichan "~ ~ ~ ~ ~ [3 ~] ~ ~" # s "midi" # note "-24"))
+    $ stack [
+    iter 8 $ struct "1(3,8)" $ midichan 0 # note "-24" --synth1
+    , ((3/16) ~>) $ iter 8 $ struct "1(3,8)" $ midichan 1 # note "-24" -- synth2
+    , plyWith hatPlies (# midichan 10) $ slow (hatPlies/denom) $ fast 4 $ midichan "11" # note "-24" -- hat
+    , plyWith hatPlies ((# gain 0.75)) $ slow (hatPlies/denom) $ fast 4 $ midichan "2" # note "-24" -- kick
+    ] # s "midi" # cps ((160/120/2) * (discretise 1 $ range 1 1 $ slow 324 rand) * (range 1 1 $ slow 3 tri))
+
+
+hush

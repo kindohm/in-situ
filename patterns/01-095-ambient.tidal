@@ -1,0 +1,32 @@
+
+
+do 
+  let plies = (slow 2 $ "<3 4 5 6 5 4 3>") :: Pattern (Ratio Integer)
+      denom = ("<3>" * (discretise 1 $ range 1 1 $ shrand 44)) :: Pattern (Ratio Integer)
+  d1
+    $ (|* gain 1.2)
+    $ someCyclesBy 0 (within (0.75,0.95) (const 
+      $ stack [ 
+        midichan " ~ ~ ~ ~ 15" # ccn 7 # ccv 0 
+        , midichan "~ ~ ~ ~ 3" # note "-24"
+        ] # s "midi"))
+    $ shift
+    $ someCycles rev
+    $ stack[
+      plyWith (plies) id $ ccn 7 # ccv 100 # midichan 15      
+      , plyWith (plies * 2) (|* gain 0.94) $ slow (plies/denom) $ fast denom $ midichan "[2]" # note "-24"
+      , plyWith (plies * 2) (# midichan 10) $ slow (plies/denom) $ fast denom $ midichan 11 # note "-24"
+    ] # s "midi"
+  d2 
+    $ (|* gain 1.1)
+    $ slow 8 $ stack [
+      note "[0,-2,7,14]" # midichan 15
+      , ccn "1*16" # ccv (range 0 127 $ slow 5 tri) # midichan 15
+      , ccn "2*16" # ccv (range 0 127 $ slow 6 tri) # midichan 15
+      , ccn "3*16" # ccv (range 0 127 $ slow 4 tri) # midichan 15
+      , ccn "4*16" # ccv (range 0 127 $ slow 5.74 tri) # midichan 15
+      , ccn "5*16" # ccv (range 0 127 $ slow 4.32839 tri) # midichan 15
+      , ccn "6*16" # ccv (range 0 127 $ slow 6.827 tri) # midichan 15
+    ] # s "midi" # cps (125/120/2)
+
+    hush

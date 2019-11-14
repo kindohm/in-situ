@@ -1,0 +1,44 @@
+do
+    let pat = (shift $ whenmod 19 14 (sometimesBy 0.5 one) 
+              $ shift $ sometimesBy 0.3 one $ shift 
+              $ slow "<2 4 2 4 6>" $ "1(<11 7 13 5 9>,32,0)") :: Pattern Bool
+        defaultWidth = 9
+        howoften = (discretise (1/4) $ shift' 82900 $ choose [0.3,0.4..0.6])
+        bOff = ccv 0
+        bOn = ccv 127
+        change p = slow (shift' 18816 $ choose [1,2,3,4]) $ p
+        chstruct = "1*2 1*2 1 ~"
+        chmod p = whenmod 23 18 g $ sometimes (0.0625 <~) $ whenmod 20 10 (slow 2) $ shift' 77 $ p
+        rip howOften p = every howOften (within (0.25, 0.75) (rev . stut 12 0.004 (0.0625/6))) $ p
+    d1 
+      $ degradeBy 0
+      $ shift' 77109
+      $ (|* gain 1.2)
+      $ whenmod 12 8 palindrome
+      $ whenmod 32 29 (iter 8)
+      $ stack [
+        degradeBy 0.2 $ shiftBy 9933 $ gain "1*8" 
+            # s (randcat ["brk1", "brk3", "fur1"]) # unit "c" # speed 8 # n (irand 10)
+        -- harmor synth
+        , sometimesBy howoften (# gain (whenmod 24 20 (const $ 1) $ 0.4) )
+            $ struct pat $ note "[-7/3,-4/3]" # midichan 15 
+            # gain 1 # s "midi"
+        -- ch
+        , whenmod 25 10 id $ (0.0625 ~>) $ struct pat $ s "ch" # gain 1.1
+        -- main drum pat
+        , sometimesBy howoften (# s "sd") $ struct pat $ s "bd"
+        -- harmor CC xfade
+        , sometimesBy howoften (# ccv (whenmod 22 18 (const $ 0) $ 127)) 
+            $ struct pat $ ccn 6 # ccv (whenmod 22 18 (const $ 127) $ 0) 
+              # midichan 15 # gain 1 # s "midi"
+        -- harmor cc's
+        , change $ ccn 1 # ccv (range 0 127 $ shrand 101) # midichan 15 # s "midi"
+        , change $ ccn 2 # ccv (range 0 127 $ shrand 202) # midichan 15 # s "midi"
+        , change $ ccn 3 # ccv (range 0 127 $ shrand 303) # midichan 15 # s "midi"
+        , change $ ccn 4 # ccv (range 0 45 $ shrand 404) # midichan 15 # s "midi"
+        , change $ ccn 7 # ccv (shift' 337 $ choose [0,64,64,64,64,127]) # midichan 15 # s "midi"
+        , change $ ccn 8 # ccv (range 0 127 $ shrand 505) # midichan 15 # s "midi"
+      ] # cps ( (160/120/2) * (range 1 1 $ slow 5 tri) * (discretise (1/4) $ range 1 1 $ shrand 88))
+
+
+  hush

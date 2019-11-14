@@ -1,0 +1,17 @@
+
+do
+  let times = 10
+  d1 
+    $ (# cps ("<1 2 3 2.5 1.5>" * (discretise 1 $ range 0.5 1.5 $ slow 33 rand) * (range 0.25 1 $ slow 3 tri)))
+    $ (|* gain 1.2)
+    $ stack [
+      plyWith times (|* legato 0.9) $ midichan 4 # note "-24" # legato 1
+      , plyWith times (# gain 0.8) $ midichan 0 # note "-24"
+      , plyWith times (# gain 0.8) $ midichan 8 # note "-24"
+      , iter (times*2) $ plyWith times (# gain 0.8) $ midichan 1 # note "-24"
+      , slow 5 $ midichan 3 # note "-24"
+      , slow 20 $ midichan 10 # note "-24"
+    ] # s "midi" 
+
+
+hush

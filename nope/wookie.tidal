@@ -1,0 +1,81 @@
+let roll' p = off (0.0625*3) id $ p 
+
+let limit p = (|* gain 1.2) $ p 
+
+let pat5 = limit $ stack [
+                (# hpf (range 100 1000 $ slow 3.5 sine))
+                $ (# hpq (range 0 0.2 $ slow 2.5 sine))
+                $ (|* cps ( (discretise 1.5 $ range 0.5 2 $ shrand 155) * (range 0.25 2 $ slow 3.5 sine) * (range 0.25 2 $ slow 4.5 sine)))
+                $ (# room (range 0.5 0.9 $ slow 3.333 sine))
+                $ (# size (range 0.5 0.95 $ slow 3.125 sine))
+                $ plyWith "<10 20 15 7 5 30>" (# gain 0.9) 
+                $ s "[wookbd2]" 
+                # n "[0 1 2 3]/40" 
+                # cps "<6 2 4 2 1>"]
+
+let pat3pat = (someCyclesBy 0.5 (const $ "{1 0 0}%16") $ shift' 7766 $ "1(<10 7 5 13>,16,<0 2 0 2 4>)") :: Pattern Bool
+
+let pat3 =
+        limit
+        $ someCyclesBy 0.2 (shift' 7 . degradeBy 0.7)
+        $ shift
+        $ whenmod 8 4 (foldEvery [2,3] ((0.0625 * 7) ~>))
+        $ someCyclesBy 0.5 (within (0.5, 1) (const 
+            $ stack [ 
+                s "~ ~ friendsy2 ~" # cut 2 # gain 0
+                , sometimes roll' $ shift' 4 $ s "~ ~ wookcp ~" 
+                    # hpf 100
+                    # n 0
+                    # speed (foldEvery [3,4] ((1.05)*) $ "1") 
+                    # cut 1 
+                    # end 0.8]))
+        $ shift' 88301
+        $ stack [
+            struct pat3pat $ s "wookbd1" # cut 1 # n 1
+            , (#n 0) $ (# speed "{1 1 0.5 1 0.5}%12") 
+                $ struct pat3pat $ s "syn" # cut 2 # hpf 80 # shape 0.5
+            , struct (inv pat3pat) $ s "wookch" # speed 1 # n 1
+        ] # cps (160/120/2)
+
+let pat3b =
+        limit
+        $ someCyclesBy 0.2 (shift' 7 . degradeBy 0.7)
+        $ shift
+        $ whenmod 8 4 (foldEvery [2,3] ((0.0625 * 7) ~>))
+        $ someCyclesBy 0.5 (within (0.5, 1) (const 
+            $ stack [ 
+                s "~ ~ pad1 ~" # cut 2 # gain 0
+                , sometimes roll' $ shift' 4 $ s "~ ~ wookcp ~" 
+                    # hpf 80
+                    # n 0
+                    # speed (foldEvery [3,4] ((1.05)*) $ "1") 
+                    # cut 1 
+                    # end 0.8]))
+        $ shift' 88301
+        $ stack [
+            struct pat3pat $ s "wookbd1" # cut 1 # n 1
+            , (# n (discretise (1/8) $ shift' 90 $ irand 10)) $ (# speed (discretise (1/4) $ shift' 7 $ choose [1])) $ struct pat3pat $ s "pad1" 
+                # cut 2 # begin 0.1
+                # gain 1.1
+            , struct (inv pat3pat) $ s "wookch" # speed 1 # n 1
+        ] # cps (160/120/2)
+
+let pat3flow = 
+        limit 
+        $ shift
+        $ stack [ 
+            (# n (slow 100 $ run 10)) 
+                $ (|* cps ( (discretise 1 $ range 0.5 1.5 $ shrand 3892) * (range 0.5 1.5 $ slow 3.5 sine) * (range 0.5 1.5 $ slow 5.25 sine) ) )
+                $ plyWith "<10 15 5 7>" (|* legato 0.9) 
+                $ s "pad1" # legato (range 1 1.5 $ slow 15 sine) # begin 0.1 # cps "<6 2 4 2 1>" # gain 1.1 # cut 2
+            , plyWith "<10 15 5 7>" (# gain 0.9) $ s "[wookbd1, wookch]", 
+            (3 ~>) $ slow 5 $ s "wookcp" # n 0 # hpf 100]
+
+            
+d1 
+    $ someCyclesBy 1 (const $ pat3flow)
+    $ shift
+    $ pat3b
+
+
+hush

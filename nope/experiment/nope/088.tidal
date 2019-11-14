@@ -1,0 +1,21 @@
+
+let stdnote = note "-24"
+
+do 
+  let pat = ("1(<9 7 5>,16,<0 8 5>)") :: Pattern Double
+      amt = (discretise (1/8) $ shiftBy 33 $ choose [0,0.2..0.8])
+  d1 
+    $ (|* gain 1.2)
+    $ shiftBy 31
+    $ stack [
+      slow "<1 1.5 0.8 1.25>" $ midichan 4 # stdnote
+      , slow "<1.5 2 1.75>" $ (0.5 ~>) $ midichan 5 # stdnote
+      , degradeBy amt $ gain pat # midichan 2 # stdnote
+      , (0.0625 ~>) $ degradeBy amt $ gain pat # midichan (slow 1.1 $ choose [6,6,6,7]) # note (shiftBy 83 $ choose [-24,-24,-23])
+      , degradeBy amt $ gain pat # midichan 9 # stdnote
+      , (0.0625 ~>) $ degradeBy amt $ gain pat # midichan 8 # stdnote
+      , stutWith (shiftBy 38249 $ choose [2,2,3,4]) (0.125*3) (id) $ slow "<8>" $ midichan "[0,10]" # stdnote
+      , every 8 g $ degradeBy (slow 2 $ "<0.2 0.3 0.5 0.7>") $ shiftBy 8 $ gain "1*16" # midichan (shiftBy 893 $ choose [11]) # stdnote
+    ] # s "midi" # cps (210/120/2)
+
+    hush

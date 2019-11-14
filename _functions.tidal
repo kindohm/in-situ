@@ -1,0 +1,43 @@
+let 
+    shift p = (1024 ~>) $ p
+    shift' num p = (num ~>) $ p
+    shiftBy = shift'
+    shrand num = shiftBy num $ rand
+    gtfo p = (const $ s "~") $ p 
+    g = gtfo
+    one p = off (0.0625) id $ p
+    rip howOften p = every howOften (within (0.25, 0.75) (rev . stut 12 0.004 (0.0625/6))) $ p
+
+    let 
+        g p = (const $ s "~") $ p
+        shift = (1024 <~) 
+        shiftBy num = (num <~)
+        shift' = shiftBy
+        shrand num = shiftBy num $ rand
+        funk howOften p = sometimesBy howOften (0.0625 ~>) $ shift $ p
+        one howOften p = sometimesBy howOften (off 0.0625 id) $ shift $ p
+        roll howOften p = sometimesBy howOften (stutWith 2 (0.0625*3) id) $ shift $ p
+        rollBy nums howOften p = sometimesBy howOften (stutWith nums (0.0625*3) id) $ shift $ p
+        rollSlow howOften p = sometimesBy howOften (stutWith 2 (0.125*3) id) $ shift $ p
+        markovPatN num startPat lists = markovPat num startPat lists
+        lists2 = [[0.6,0.3], [0.6,0.3]]
+        lists3 = [[0.6,0.3,0.3], [0.6,0.3,0.4], [0.7,0.5,0.2]]
+        lists4 = [[0.6,0.4,0.3,0.2], [0.6, 0.4, 0.5, 0.5], [0.5, 0.6, 0.2, 0.3], [0.8, 0.7, 0.6, 0.4]]
+        mk2 v = fmap (v!!) $ markovPatN 8 "<0 1>" lists2
+        mk3 v = fmap (v!!) $ markovPatN 8 "<0 1 2>" lists3
+        mk4 v = fmap (v!!) $ markovPatN 8 "<0 2 1 3>" lists4
+        -- ok here is where we actually get some usable patterns
+        nk2 v = n (mk2 v)
+        nk3 v = n (mk3 v)
+        nk4 v = n (mk4 v)
+        deg = degrade 
+        dBy x p = degradeBy x $ shift $ p
+        dby = dBy
+        less p = dBy 0.2 $ shift $ p
+        less0 p = id $ p
+        less1 = less
+        less2 p = less $ less $ p
+        less3 p = less2 $ less $ p
+        less4 p = less3 $ less $ p
+        less5 p = less4 $ less $ p
+    

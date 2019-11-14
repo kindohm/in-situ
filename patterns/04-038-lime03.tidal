@@ -1,0 +1,62 @@
+hush
+
+do
+    let howoften = 10
+        ongain = "1"
+        offgain = "0.4"
+        mute1 p = id $ p
+        mute2 p = g $ p
+        densities = [1,1.1 .. 3]
+        den p = density (discretise (1/4) $ shift' 3829 $ choose densities) $ shift $ p
+        ctlGain = gain (randcat ( 
+                        (replicate 1 "1") 
+                    ++ (replicate 2 "1*2") 
+                    ++ (replicate 3 "1*3") 
+                    ++ (replicate 4 "1*4") 
+                    ++ (replicate 5 "1*5") 
+                    ++ (replicate 6 "1*6") 
+                    ++ (replicate 7 "1*7") 
+                    ++ (replicate howoften "1") 
+                        ))
+    p "drums" $ den $ s (randcat ( 
+            (replicate 1 "midi") 
+            ++ (replicate 2 "midi*2") 
+            ++ (replicate 3 "midi*3") 
+            ++ (replicate 4 "midi*4") 
+            ++ (replicate 5 "midi*5") 
+            ++ (replicate 6 "midi*6") 
+            ++ (replicate 7 "midi*7") 
+            ++ (replicate howoften "~") 
+        )) # midinote (shift' 400 $ choose [0,0,3]) # gain 1.1 # cps 0.5
+    p "synth accent" $ mute1 $ (|* gain 1.1) $ den $ gain (randcat ( 
+            (replicate 1 offgain) 
+            ++ (replicate 2 offgain) 
+            ++ (replicate 3 offgain) 
+            ++ (replicate 4 offgain) 
+            ++ (replicate 5 offgain) 
+            ++ (replicate 6 offgain) 
+            ++ (replicate 7 offgain) 
+            ++ (replicate howoften ongain) 
+        )) # s "midi" # midichan 13
+    p "synth glitch" $ mute2 $ (|* gain 1.1) $ den $ gain (randcat ( 
+            (replicate 1 ongain) 
+            ++ (replicate 2 ongain) 
+            ++ (replicate 3 ongain) 
+            ++ (replicate 4 ongain) 
+            ++ (replicate 5 ongain) 
+            ++ (replicate 6 ongain) 
+            ++ (replicate 7 ongain) 
+            ++ (replicate howoften offgain) 
+        )) # s "midi" # midichan 13
+    p "cc" $ den $ stack [ 
+                 ctlGain # ccn 1 # ccv (range 0 127 $ shift' 300 rand) 
+                , ctlGain # ccn 2 # ccv (range 0 127 $ shift' 301 rand) 
+                , ctlGain # ccn 3 # ccv (range 0 127 $ shift' 302 rand) 
+                , ctlGain # ccn 4 # ccv (range 0 127 $ shift' 303 rand) 
+                , ctlGain # ccn 5 # ccv (shift' 304 $ choose [0,127]) 
+                , ctlGain # ccn 6 # ccv (range 0 127 $ shift' 305 rand) 
+                , ctlGain # ccn 7 # ccv (range 0 127 $ shift' 306 rand) 
+                , ctlGain # ccn 100 # ccv (shift' 238924 $ choose [0,127])
+                ] 
+            # s "midi" # midichan 13 
+

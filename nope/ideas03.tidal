@@ -1,0 +1,46 @@
+
+
+do 
+    -- resetCycles
+    let pat = "<4 2 1 2 3 0.5>"
+        range1Min = 0.5 
+        range1Max = 2 
+        range2Min = 0.5
+        range2Max = 1.5
+        cpsPat = ( 
+            (pat) 
+            * (discretise 1 $ range range1Min range1Max $ shrand 324) 
+            * (range range2Min range2Max $ slow 5 tri) ) :: Pattern Double
+    d1 
+        $ (|* gain 1.2)
+        $ (# cps cpsPat)
+        $ every 7 (const $ s "sd2" # gain 0.9)
+        $ stack [
+            plyWith ((20/) $ pat) (|* legato 0.9) $ s "stab3" # legato (range 1 3 $ slow 12 tri) # cut 1 # n 28 # gain 1
+           , plyWith ((20/) $ pat) ((# gain 0.7) ) $ s "bd2"
+        ]
+    d2
+        $ degradeBy 0.6 
+        $ gain "1" 
+        # s (shiftBy 9988 $ choose ["aer", "crackle", "bear"])
+        # speed (range 0.75 1.1 $ shrand 78782) 
+        # n (shiftBy 389203 $ irand 5) 
+        # hpf 500
+    d4 
+        $ every 7 g 
+        $ sometimesBy 0.5 (off 0.666 (# up 7))
+        $ s "chd"        
+        # lpf (range 400 4000 $ slow 15 tri)
+
+hush
+
+
+        p "a4"
+        $ g $ (# cps cpsPat)
+        $ every 7 g
+        $ (|+ note "-12")
+        $ someCyclesBy 0.3 (off 0.666 (|+ note 5))
+        $ note "[2,5,9,14]"
+        # s "midi"
+        # legato 0.5
+        # gain 1.2

@@ -1,0 +1,35 @@
+
+do
+  let 
+    plies = (foldEvery [2,3,4] (0.75 ~>) $ slow 2 $ "<3 3 5 6 7>") :: Pattern (Ratio Integer)
+    denom = (slow 1 $ (discretise (1/8) $ slow 389 $ choose [4,8,4])) :: Pattern (Ratio Integer)
+  d1
+    $ (|* gain 1.05)
+    $ (# cps ((160/120/2) * (discretise 1 $ range 1 1 $ shrand 8923) * (range 1 1 $ slow 3 sine) ))
+    $ someCyclesBy 0.5 (within (0.625,1) (const $ s "~ [~ midi ~ ~]" # note "-24" # midichan 3))
+    $ stack [
+      plyWith plies ((# gain 0.8)) 
+        $ slow (plies/denom) $ fast 2 $ midichan 2 # note "-36"
+      , plyWith plies (# midichan 10)
+        $ slow (plies/denom) $ fast 2 $ midichan 11 # note "-24"
+      , rollSlow 1 $ midichan 4 # note "-24"
+      , degradeBy 0.3 $ shift 
+        $ pan "1*16" # midichan (shiftBy 9 $ choose [6,7]) # note "-24" # gain (range 0.7 1 $ shrand 74)
+    ] # s "midi"
+  d2
+    $ stack [
+    ccn "1*4" # ccv (range 1 126 $ slow 20 tri)
+    , ccn "3*4" # ccv (range 1 126 $ slow 22 tri)
+    , ccn "4*4" # ccv (range 70 126 $ slow 19.333 tri)
+    , ccn "5*4" # ccv (range 1 126 $ slow 18.389 tri)
+    , ccn "6*4" # ccv (range 40 90 $ slow 17.189 tri)
+    , ccn "7*4" # ccv (range 1 126 $ slow 16 tri)
+    , (|+ note "-7") 
+      $ slow 4 
+      $ note "{[0 4] 2 -24 ~ [ 4 11] ~ ~ [0] [14 16] ~ 11 ~ ~}%16" 
+      # gain 1.05
+    ] # s "midi" # midichan 12
+    
+
+
+    hush

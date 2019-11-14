@@ -1,0 +1,20 @@
+
+
+do 
+  let pat = "<2 4 2 4 4 6 2 1 1>"
+      times = "[10]/10"
+  d1 
+    $ (# cps (pat * (discretise 1 $ range 0.3 1 $ shrand 389) * (range 0.5 1.5 $ slow 4 tri)) )
+    $ (|* gain 1.2) 
+    $ someCyclesBy 0 (within (0.5,1) (const $ midichan "~ 7" # note "-24" # s "midi"))
+    $ stack [ 
+      plyWith ((times/) $ pat) (# gain 0.7) $ note "-24" # midichan "[0,1]" -- notes
+      , g $ plyWith ((times/) $ pat) (# gain 0.7) $ note "-24" # midichan "[2,3]" -- kicks
+      , g $ plyWith ((times/) $ pat) (# gain 0.7) $ note "-24" # midichan "[10,11]" -- hats
+      , midichan 6 # note "-24"
+      ] 
+      # s "midi" 
+
+
+
+      hush

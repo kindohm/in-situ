@@ -1,0 +1,13 @@
+
+do 
+    let pat = "<1 1.5 1 3 2>"
+    d1 
+        $ (|* gain 1.1)
+        $ someCyclesBy 0.5 (within (0,0.25) (const $ stack [ midinote 3] # s "midi"))
+        $ foldEvery [2,3,4,5] (0.125 ~>)
+        $ stack [
+            sometimesBy 0.2 one $ midinote "{2 ~ ~}%8"
+            , midinote "10(<3 7 5>,16,<0 7 3 10>)"
+        ] # s "midi" # cps (160/120/2)
+
+    hush

@@ -1,0 +1,27 @@
+let pat = "<4 2 4 2 1 1 1>"
+
+d1 
+    $ (|* gain 1.2)
+    $ (# cps (pat * (discretise 1 $ range 1 1 $ shrand 3829) * (range 1 1 $ slow 3 tri)))
+    $ stack [
+        slow 4 $ midichan 5 # note "-24" 
+        , slow 4.1 $ midichan 4 # note "-24"
+    ]
+    # s "midi"
+
+
+d1 
+    $ (|* gain 1.1)
+    $ (# cps (pat * (discretise 1 $ range 0.4 1.25 $ shrand 3829) * (range 1 1 $ slow 3 tri)))
+    $ someCyclesBy 0.4 (within (0.5,1) (const $ midinote "~ 3" # s "midi"))
+    $ stack [
+        slow 4 $ pad6 
+        , slow 4.1 $ pad5
+        , g $ plyWith ((15/) $ pat) ((|* legato 0.97) . (# note "[-36]")) $ note "-24" # legato 1
+        , plyWith ((15/) $ pat) (# gain 0.8) $ pad3
+        , plyWith ((15/) $ pat) (# pad11) $ pad12
+        , (4 ~>) $ slow 4 $ midinote 1
+    ]
+    # s "midi"
+
+    hush

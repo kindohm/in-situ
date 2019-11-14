@@ -1,0 +1,23 @@
+
+do 
+  let 
+    pat = "<4 2 4 2 1 1 1>"
+    period = 0
+    amb1Mute = id
+    amb2Mute = id
+    bassMute = g
+    drumsMute = g
+    snareMute = g
+    times = 15
+    bassPlyFunc = ((|* legato 0.97) . (# note "[-36]"))
+    kickPlyFunc = (# gain 0.8)
+    hatPlyFunc = (# pad11)
+    bassLfoDepth = 0
+    bassLfoRate = 0
+    amb2LfoRate = 0
+    amb2LfoDepth = 0
+  d1 
+    $ cpsDisc 0.25 1
+    $ scrape pat times period bassPlyFunc kickPlyFunc hatPlyFunc amb1Mute amb2Mute drumsMute snareMute bassMute bassLfoDepth bassLfoRate amb2LfoRate amb2LfoDepth
+
+    hush

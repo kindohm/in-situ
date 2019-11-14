@@ -1,0 +1,26 @@
+
+do 
+  let pat = "<1 2.5 0.75 1.5 1.25>"
+      plyPat = "<2 4 3 5>"
+  d1 
+    $ (|* gain 1.2)
+    $ (|+ note "0")
+    $ (# cps (pat * (discretise 1 $ range 0.25 0.75 $ shrand 661)))
+    $ stack [
+      every 1 (superimpose (# midichan 1))
+        $ (|+ note "-24") $ plyWith plyPat (|* legato 0.8) $ note "[0,-4,0,0,10]" # legato 0.5
+      , plyWith plyPat id $ ccn "[35,35,35,35,35]" # ccv (range 0 100 $ shrand 739)
+      , every 1 (# ccv 0) $ ccn 10 # ccv 64
+      , plyWith plyPat id $ ccn "[36,36,36,36,36]" # ccv (range 0 100 $ shrand 739) 
+      , ccn 40 # ccv (range 1 100 $ shrand 879)
+      --, ccn 41 # ccv (range 1 1 $ shrand 8392111)
+      , plyWith plyPat (# gain 0.8) $ midichan "[2,2,2,2,2]" # note "-24"
+      , plyWith plyPat (# gain 0.8) $ midichan "[11,10,10,10,10]" # note "-24"
+    ] # s "midi" 
+
+    hush
+
+
+d1 $ s "midi" # midichan 1 # ccn 35 # ccv 64
+
+d1 $ fast 4 $ ccn 18 # ccv "[1 120]" # s "midi" # midichan 0

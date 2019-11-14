@@ -1,0 +1,34 @@
+
+let markov3 = mk3
+let markov4 = mk4
+
+let deg = degradeBy
+
+
+d1 
+    $ (|* gain 1.2)
+    $ whenmod 18 15 (slow (4/3))
+    $ whenmod 12 6 (foldEvery [3,4,5] (0.375 ~>))
+    $ stack [
+        deg 0.5 $ fast 2 $ midinote (unwrap $ markov3 [2,"~",3])
+        , deg 0.5 $ fast 2 $ midinote (unwrap $ markov3 [11,10,10])
+        , deg 0.4 $ shiftBy 9 $ fast 2 $ midinote (unwrap $ markov4 [6,6,6,7])
+        , roll 0.5 $ deg 0.5 $ iter 16 $ midinote 0
+        , rollSlow 1 $ midinote "~ 1"
+    ]
+    # s "midi" # cps (160/120/2)
+
+    hush
+
+
+let pat = "<4 2 4 2 1 1 1>"
+
+d1 
+    $ (# cps (pat * (discretise 1 $ range 0.4 1.25 $ shrand 3829) * (range 0.4 1 $ slow 3 tri)))
+    $ stack [
+        plyWith ((15/) $ pat) ((|* legato 0.97) . (# note "[-36]")) $ note "-24" # legato 1
+        , plyWith ((15/) $ pat) (# gain 0.8) $ midinote "[2]"
+        , plyWith ((15/) $ pat) (# midinote 10) $ midinote 11
+        , (4 ~>) $ slow 4 $ midinote 1
+    ]
+    # s "midi"

@@ -1,0 +1,10 @@
+-- test
+
+p 1 $ s "bd snpr"
+
+
+let high = pI "high"
+
+p 2 $ note "3 4" # high "[0 1]/2"
+
+d1 $ midinote "0" s "midi" 
