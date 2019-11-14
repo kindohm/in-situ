@@ -110,3 +110,30 @@ let rising plies denom period kickPlyFunc hatPlyFunc synthMute hatMute drumsMute
                         , synthMute $ ccn 40 # ccv synthDown
                         , synthMute $ ccn 41 # ccv synthDown
                         ] # s "midi" # cps (160/120/2)                
+
+let cantsynth = 
+                stack [
+                  ccn "1*4" # ccv (range 1 126 $ slow 20 tri)
+                  , ccn "3*4" # ccv (range 1 126 $ slow 22 tri)
+                  , ccn "4*4" # ccv (range 70 126 $ slow 19.333 tri)
+                  , ccn "5*4" # ccv (range 1 126 $ slow 18.389 tri)
+                  , ccn "6*4" # ccv (range 40 90 $ slow 17.189 tri)
+                  , ccn "7*4" # ccv (range 1 126 $ slow 16 tri)
+                  , (|+ note "-7") 
+                    $ slow 4 
+                    $ note "{[0 4] 2 -24 ~ [ 4 11] ~ ~ [0] [14 16] ~ 11 ~ ~}%16" 
+                    # gain 1.05
+                  ] # s "midi" # midichan 12    
+                  
+let cantdrums plies denom period kickPlyFunc hatPlyFunc kickMute hatMute rollMute percMute = 
+                (|* gain 1.2)
+                $ someCyclesBy period (within (0.625,1) (const $ s "~ [~ midi ~ ~]" # note "-24" # midichan 3))
+                $ stack [
+                  kickMute $ plyWith plies kickPlyFunc 
+                    $ slow (plies/denom) $ fast 2 $ midichan 2 # note "-36"
+                  , hatMute $ plyWith plies hatPlyFunc
+                    $ slow (plies/denom) $ fast 2 $ pad12
+                  , rollMute $ rollSlow 1 $ pad5
+                  , percMute $ degradeBy 0.3 $ shift 
+                    $ pan "1*16" # midichan (shiftBy 9 $ choose [6,7]) # note "-24" # gain (range 0.7 1 $ shrand 74)
+                ] # s "midi" # cps (160/120/2)                  
