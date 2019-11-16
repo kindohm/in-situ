@@ -43,8 +43,7 @@ let unfollowed =
                     , ccn "5*16" # ccv (range 0 127 $ slow 4.32839 tri) 
                     , ccn "6*16" # ccv (range 0 127 $ slow 6.827 tri) 
                   ] # unfollowedChan # s "midi"
-              
-let unfollowedDrums plies denom mult1 mult2 period muteDrums muteHats drumFunc hatFunc revOften = 
+    unfollowedDrums plies denom mult1 mult2 period muteDrums muteHats drumFunc hatFunc revOften = 
                       (|* gain 1.2)
                       $ someCyclesBy period (within (0.75,0.95) (const 
                         $ stack [ 
@@ -58,8 +57,7 @@ let unfollowedDrums plies denom mult1 mult2 period muteDrums muteHats drumFunc h
                         , muteDrums $ plyWith (plies * mult1) drumFunc $ slow (plies/denom) $ fast denom $ pad3
                         , muteHats $ plyWith (plies * mult2) hatFunc $ slow (plies/denom) $ fast denom $ pad12
                       ] # cps (125/120/2) # rytm
-
-let twoxbd pat times plyFunc superKick superHat synthFilter bendUp bendDown kickHold period muteKick muteHat revFreq = 
+    twoxbd pat times plyFunc superKick superHat synthFilter bendUp bendDown kickHold period muteKick muteHat revFreq = 
                       (# cps (pat * 0.5))
                       $ (|* gain 1.2) 
                       $ someCyclesBy revFreq rev
@@ -76,9 +74,7 @@ let twoxbd pat times plyFunc superKick superHat synthFilter bendUp bendDown kick
                         , fast 4 $ ccn 37 # ccv kickHold
                         ] 
                         # rytm
-
-
-let scrape pat times period bassPlyFunc kickPlyFunc hatPlyFunc amb1Mute amb2Mute drumsMute snareMute bassMute bassLfoDepth bassLfoRate amb2LfoRate amb2LfoDepth = 
+    scrape pat times period bassPlyFunc kickPlyFunc hatPlyFunc amb1Mute amb2Mute drumsMute snareMute bassMute bassLfoDepth bassLfoRate amb2LfoRate amb2LfoDepth = 
                         (|* gain 1.1)
                         $ (# cps pat)
                         $ someCyclesBy period (within (0.5,1) (const $ struct "~ 1" $ pad4))
@@ -95,9 +91,7 @@ let scrape pat times period bassPlyFunc kickPlyFunc hatPlyFunc amb1Mute amb2Mute
                             , amb2Mute $ ccn 41 # ccv amb2LfoDepth
                         ]
                         # rytm
-
-
-let rising plies denom period kickPlyFunc hatPlyFunc synthMute hatMute drumsMute synthUp synthDown kickFill = 
+    rising plies denom period kickPlyFunc hatPlyFunc synthMute hatMute drumsMute synthUp synthDown kickFill = 
                         (|* gain 1.2)
                         $ someCyclesBy period (within (0.625, 1) (const $ stack [ pan "~ ~ ~ ~ ~ [1 ~] ~ ~" # pad4, kickFill $ pan "~ ~ ~ ~ ~ [~ 1?] 1*2? 1*2?" # pad3 ]))
                         $ stack [
@@ -110,8 +104,7 @@ let rising plies denom period kickPlyFunc hatPlyFunc synthMute hatMute drumsMute
                         , synthMute $ ccn 40 # ccv synthDown
                         , synthMute $ ccn 41 # ccv synthDown
                         ] # s "midi" # cps (160/120/2)                
-
-let cantsynth = 
+    cantsynth = 
                 stack [
                   ccn "1*4" # ccv (range 1 126 $ slow 20 tri)
                   , ccn "3*4" # ccv (range 1 126 $ slow 22 tri)
@@ -124,8 +117,7 @@ let cantsynth =
                     $ note "{[0 4] 2 -24 ~ [ 4 11] ~ ~ [0] [14 16] ~ 11 ~ ~}%16" 
                     # gain 1.05
                   ] # s "midi" # midichan 12    
-                  
-let cantdrums plies denom period kickPlyFunc hatPlyFunc kickMute hatMute rollMute percMute = 
+    cantdrums plies denom period kickPlyFunc hatPlyFunc kickMute hatMute rollMute percMute = 
                 (|* gain 1.2)
                 $ someCyclesBy period (within (0.625,1) (const $ s "~ [~ midi ~ ~]" # note "-24" # midichan 3))
                 $ stack [
