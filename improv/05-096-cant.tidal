@@ -3,7 +3,7 @@ do
   let 
     plies = (foldEvery [2,3,4] (0.75 ~>) $ slow 2 $ "<3 3 5 6 7>") :: Pattern (Ratio Integer)
     denom = (slow 1 $ (discretise (1/8) $ slow 389 $ choose [4,8,4,6])) :: Pattern (Ratio Integer)
-    period = 0.5
+    period = 0.8
     kickMute = id
     kickPlyFunc= (|* gain 0.9)
     hatPlyFunc = (# pad11)
@@ -16,5 +16,7 @@ do
     $ cantdrums plies denom period kickPlyFunc hatPlyFunc kickMute hatMute rollMute percMute
   d2
     $ cantsynth
+  d3 
+    $ ccn 92 # ccv "<0 1 1 1 0 0 0>" # s "midi" # midichan 0
 
     hush

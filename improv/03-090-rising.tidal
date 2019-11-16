@@ -6,14 +6,17 @@ do
       period = 0.5
       hatPlyFunc = (# pad11)
       kickPlyFunc = (# gain 0.8)
-      synthUp = (range 0 127 $ slow 30 sine)
+      synthUp = 0
       synthDown = 0
       synthMute = id 
       hatMute = id 
       drumsMute = id
-      kickFill = g
+      kickFill = id
   d1 
     $ rising plies denom period kickPlyFunc hatPlyFunc synthMute hatMute drumsMute synthUp synthDown kickFill
+  
+    d2 $ ccn 92 # ccv (discretise (1/8) $ shiftBy 33 $ choose [0,1]) # s "midi" # midichan 0
 
+d2 silence
 
 hush

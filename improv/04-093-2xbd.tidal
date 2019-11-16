@@ -4,21 +4,22 @@ do
   let pat = "<2 4 2 4 4 6 2 1 1>"
       times = "<10>"
       plyFunc = (# gain 0.7)
-      period = 0
-      superKick = "<0 1 1 0 0>"
-      superHat = "<1 1 0>"
+      period = 0.4
+      superKick = "<0 1 1 1 0 0>"
+      superHat = "<1 1 0 0 1>"
       muteKick = id
       muteHat = id
-      synthFilter = 20
-      bendUp = 0
-      bendDown = 0
+      synthFilter = (range 20 70 $ slow 30 sine)
+      bendUp = (range 0 127 $ slow 25 sine)
+      bendDown = (range 0 127 $ slow 35 sine)
       kickHold = 0
-      revFreq = 0
+      revFreq = 0.3
   d1 
     $ twoxbd pat times plyFunc superKick superHat synthFilter bendUp bendDown kickHold period muteKick muteHat revFreq
+  d2
+    $ ccn 92 # ccv "[0 1]/2" # s "midi" # midichan 0
 
-
-
+d2 silence
 
 
       hush

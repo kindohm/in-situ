@@ -2,12 +2,12 @@
 do 
   let 
     pat = "<4 2 4 2 1 1 1>"
-    period = 0
+    period = 0.8
     amb1Mute = id
     amb2Mute = id
     bassMute = g
-    drumsMute = g
-    snareMute = g
+    drumsMute = id
+    snareMute = id
     times = 15
     bassPlyFunc = ((|* legato 0.97) . (# note "[-36]"))
     kickPlyFunc = (# gain 0.8)
@@ -19,5 +19,8 @@ do
   d1 
     $ cpsDisc 0.25 1
     $ scrape pat times period bassPlyFunc kickPlyFunc hatPlyFunc amb1Mute amb2Mute drumsMute snareMute bassMute bassLfoDepth bassLfoRate amb2LfoRate amb2LfoDepth
+  d2 $ ccn 92 # ccv "<1 1 0 0 1 0 1 1 1 1 1 0 0 0 0>" # s "midi" # midichan 0
+
+    d2 silence
 
     hush

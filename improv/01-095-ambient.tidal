@@ -3,18 +3,19 @@
 do 
   let plies = (slow 2 $ "<4 5 2 3>") :: Pattern (Ratio Integer)
       denom = (slow 2 $ "<3 3 4 4 3 4>") :: Pattern (Ratio Integer)
-      period = 0.5
+      period = 0.9
       muteDrums = id 
       muteHats = id
       mult1 = "<1 2 1>"
       mult2 = "<1 2 2 1 2>"
-      drumFunc = (|* gain 0.8)
+      drumFunc = (|* gain 0.9)
       hatFunc = (# pad11)
-      revOften = 0.5
+      revOften = 0
   d1 
     $ foldEvery [2,3,4] (0.75 ~>)
     $ unfollowedDrums 
         plies denom mult1 mult2 period muteDrums muteHats drumFunc hatFunc revOften
   d2 $ fast 2 $ unfollowed
+  d3 $ ccn 92 # ccv (discretise 1 $ shiftBy 3 $ choose [0,1]) # s "midi"
 
     hush
