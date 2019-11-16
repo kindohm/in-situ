@@ -19,7 +19,12 @@ do
   d1 
     $ cpsDisc 0.25 1
     $ scrape pat times period bassPlyFunc kickPlyFunc hatPlyFunc amb1Mute amb2Mute drumsMute snareMute bassMute bassLfoDepth bassLfoRate amb2LfoRate amb2LfoDepth
-  d2 $ ccn 92 # ccv "<1 1 0 0 1 0 1 1 1 1 1 0 0 0 0>" # s "midi" # midichan 0
+  d2 $ stack [
+      g $ ccn 92 # ccv "<1 1 0 0 1 0 1 1 1 1 1 0 0 0 0>" # s "midi" # midichan 0
+      , g $ slow 3.3 $ ccn 45 # ccv (discretise (1/4) $ shiftBy 8 $ choose [0]) # s "midi" # midichan 0
+      , g $ slow 4.18 $ ccn 46 # ccv (range 0 0 $ shrand 7237) # s "midi" # midichan 0
+      , g $ slow 2.58 $ ccn 47 # ccv (range 1 1 $ shrand 7337) # s "midi" # midichan 0
+    ]
 
     d2 silence
 

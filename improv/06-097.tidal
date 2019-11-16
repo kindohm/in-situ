@@ -1,42 +1,22 @@
 
 
--- mi interlude
-d3 
-  $ jux rev
-  $ (# pan rand)
-  $ foldEvery [2,3,4,5,6] (1.75 <~) 
-  $ (# bpf (range 300 2000 $ slow 2.7 tri))
-  $ plyWith "<10 15 5 20>" ((|+ accelerate "-0.2") . (|* legato 0.9))
-  $ slow 8 $ striate' "<128 256 64>" (range (1/30) (1/20) $ fast 3 $ sine ) $ n "[11,12,10]" # s "mi"
-  # speed (range 0.9 1.1 $ shrand 839) # gain 0.9
-
-  hush
-
-  setcps (160/120/2)
-
-asap $ s "pattonfull"
-
-
-d1 
-  $ (|* gain 1.2) 
-  $ slow 1
-  $ stack [note 0 # midichan 14, ccn 1 # ccv (range 0 127 $ slow 3313 rand) # midichan 14,
-  (0.5 ~>) $ note 0 # midichan 13, ccn 1 # ccv (range 0 127 $ slow 13313 rand) # midichan 13 ] 
-  # s "midi" # cps 1
-
-  hush
-
 do 
   let plies = 10 
       pat = "<1 1.5 1 2 0.75 1>"
   d1
     $ (|* gain 1.2)
+    $ cpsDisc 0.5 1.5
     $ stack [
       slow 8 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad1
       , slow 7.23234 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad2
       , someCyclesBy 0.3 rev $ plyWith ((plies/) $ pat) (|* gain 0.95) $ randcat [pad3,pad4,pad7,pad8] 
       , plyWith ((plies/) $ pat) ((# pad11) . (|* gain 0.95)) $ pad12
-      , ccn 92 # ccv (discretise (1/8) $ shiftBy 389 $ choose [0])
+      , ccn 92 # ccv "<0 0 0 1 1 1 2 2 2>"
+      , slow 2.13 $ ccn 45 # ccv (range 0 127 $ shrand 99883)
+      , slow 1.13 $ ccn 46 # ccv (range 0 127 $ shrand 9988)
+      , slow 3.1 $ ccn 47 # ccv (range 0 127 $ shrand 19988)
     ] # s "midi" # cps pat
 
 hush
+
+
