@@ -31,5 +31,7 @@ do
     ] # s "midi" # midichan 12
     
 
+    d1 $ superimpose (# midichan 1) $ (|+ note "-24") $ note "{[0 4] 2 -24 ~ [ 4 11] ~ ~ [0] [14 16] ~ 11 ~ ~}%4" # s "midi" # cps (160/120/2)
+
 
     hush

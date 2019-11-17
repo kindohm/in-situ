@@ -39,3 +39,16 @@ do
     ] # s "midi" # cps pat
 
 hush
+
+
+p "s1" 
+  $ (|* gain 1.2) 
+  $ (|+ note "-24") $ note "<4 5 7 0>" # s "midi" # cps 1
+
+p "s2"
+  $ (|* gain 1.2) 
+  $ (3 ~>)
+  $ (|+ note "-24") $ note "<4 5 7 0>" # s "midi" # cps 1 # midichan 1
+
+
+  hush
