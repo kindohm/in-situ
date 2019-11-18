@@ -1,0 +1,30 @@
+do 
+  let plies = "<10 5 15 20>" 
+      pat = "<1 1.5 1 2 0.75 1>"
+      plyFunc = (|* gain 0.95)
+      plyDivHatFade a b = plyWith ((a/) $ b) ((#pad11) . (|* gain 0.95)) $ pad12
+      plyDivHat a b = plyWith ((a/) $ b) ((#pad11) . (# gain 0.85)) $ pad12
+      plyDiv4Fade a b = plyWith ((a/) $ b) (|* gain 0.95) $ randcat [pad3, pad4, pad7, pad8]
+      randDelay = stack [ slow 2.13 $ ccn 45 # ccv (shiftBy 5544 $ choose [0,127]) -- d
+                          , slow 1.13 $ ccn 46 # ccv (range 0 127 $ shrand 9988) -- dt
+                          , slow 3.1 $ ccn 47 # ccv (range 0 127 $ shrand 19988) ] # s "midi"
+      normDelay = stack [ ccn 45 # ccv 0, ccn 46 # ccv 0, ccn 47 # ccv 0 ] # s "midi"
+      scene x = ccn 92 # ccv x
+      sparseBass = stack [ slow 8 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad1 -- bass1
+                            , slow 7.23234 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad2 -- bass2
+                          ]
+  d1
+    $ cpsTri 0.5 1.25 3
+    $ cpsDisc 0.5 1.5
+    $ (|* gain 1.2)
+    $ stack [
+      sparseBass
+      , plyDiv4Fade plies pat
+      , plyDivHatFade plies pat 
+      , scene (randcat [0,1,2])
+      , randcat [normDelay, randDelay]
+    ] # s "midi" # cps pat
+
+    hush
+
+

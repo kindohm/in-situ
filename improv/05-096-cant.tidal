@@ -2,7 +2,7 @@
 do
   let 
     plies = (slow 2 $ "<3 3 5 6 7>") :: Pattern (Ratio Integer)
-    denom = ((discretise (1/8) $ slow 389 $ choose [4])) :: Pattern (Ratio Integer)
+    denom = ((discretise (1/8) $ slow 389 $ choose [6,4,8])) :: Pattern (Ratio Integer)
     period = 0.5
     kickMute = id
     kickPlyFunc= (# gain 0.7)
@@ -11,6 +11,7 @@ do
     rollMute = g
     percMute = id
   d1
+    $ g $ cpsDisc 1 1
     $ cantdrums plies denom period kickPlyFunc hatPlyFunc kickMute hatMute rollMute percMute
   d2
     $ superimpose (# midichan 1) 
@@ -19,7 +20,7 @@ do
   d3 
     $ stack [
       -- bends
-      ccn 35 # ccv 64
+      ccn 35 # ccv (range 64 64 $ slow 12 tri)
       -- filters
       , ccn 36 # ccv (range 10 50 $ slow 10 tri)
       -- pitch lfo depth
@@ -31,7 +32,10 @@ do
       -- detune 2
       , ccn 41 # ccv (range 0 0 $ slow 11 tri)
       -- scene
-      , ccn 92 # ccv "<0 0 1 1 2 2>" 
+      , fast 2 $ ccn 92 # ccv (shiftBy 7 $ choose [0,1,2]) 
+      -- delay
+      , ccn 46 # ccv (range 0 127 $ shrand 91)
+      , ccn 47 # ccv (range 10 127 $ shrand 90)
     ] # s "midi" # midichan 0
 
     hush

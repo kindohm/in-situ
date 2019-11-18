@@ -31,6 +31,11 @@ let
   cpsDisc a b = (|* cps (discRange a b))
   cpsRange a b c = (|* cps (triRange a b c))
   cpsTri = cpsRange
+  randDelay = stack [ slow 2.13 $ ccn 45 # ccv (shiftBy 5544 $ choose [0,127]) -- d
+                      , slow 1.13 $ ccn 46 # ccv (range 0 127 $ shrand 9988) -- dt
+                      , slow 3.1 $ ccn 47 # ccv (range 0 127 $ shrand 19988) ] # s "midi"
+  normDelay = stack [ ccn 45 # ccv 0, ccn 46 # ccv 0, ccn 47 # ccv 0 ] # s "midi"
+  scene x = ccn 92 # ccv x
 
 let unfollowed = 
                   (|* gain 1.1)
