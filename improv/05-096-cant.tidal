@@ -11,12 +11,25 @@ do
     rollMute = g
     percMute = id
   d1
-    $ g $ cpsDisc 1 1
-    $ cantdrums plies denom period kickPlyFunc hatPlyFunc kickMute hatMute rollMute percMute
-  d2
-    $ superimpose (# midichan 1) 
-    $ (|+ note "-31") $ (|+ note "12")
-    $ note "{[0 4] 2 -24 ~ [ 4 11] ~ ~ [0] [14 16] ~ 11 ~ ~}%4" # s "midi" # cps (160/120/2)
+    $ cpsDisc 1 1
+    $ (|* gain 1.2)
+    $ someCyclesBy period (within (0.625,1) (const $ s "~ [~ midi ~ ~]" # note "-24" # midichan 3))
+    $ stack [
+      kickMute $ plyWith plies kickPlyFunc 
+        $ slow (plies/denom) $ fast 2 $ midichan 2 # note "-36"
+      , hatMute $ plyWith plies hatPlyFunc
+        $ slow (plies/denom) $ fast 2 $ pad12
+      , rollMute $ rollSlow 1 $ pad5
+      , percMute $ degradeBy 0.3 $ shift 
+        $ pan "1*16" # midichan (shiftBy 9 $ choose [6,7]) # note "-24" # gain (range 0.7 1 $ shrand 74)
+      , normDelay
+      , scene (randcat [0,1,2])
+    ] # s "midi" # cps (160/120/2)
+  d2 $ cantsynth
+
+hush
+
+
   d3 
     $ stack [
       -- bends
@@ -41,3 +54,9 @@ do
     hush
 
     d3 silence
+
+
+    d2
+    $ superimpose (# midichan 1) 
+    $ (|+ note "-31") $ (|+ note "12")
+    $ note "{[0 4] 2 -24 ~ [ 4 11] ~ ~ [0] [14 16] ~ 11 ~ ~}%4" # s "midi" # cps (160/120/2)
