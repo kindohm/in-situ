@@ -16,6 +16,8 @@ d3
 
 asap $ s "pattonfull"
 
+d1 $ s "pattonfull"  # cut 1
+
 
 d1 
   $ (|* gain 1.2) 

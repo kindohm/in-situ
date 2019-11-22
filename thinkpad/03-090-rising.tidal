@@ -1,0 +1,47 @@
+
+
+do 
+  let plies = (slow 2 $ "<3 4 5 7>") :: Pattern (Ratio Integer)
+      denom = 4
+      period = 0.4
+      hatPlyFunc = (# pad11)
+      kickPlyFunc = (# gain 0.8)
+      synthUp = 0
+      synthDown = 0
+      synthMute = id 
+      hatMute = id
+      drumsMute = id
+      kickFill = id
+  d1 
+    $ (|* cps 0.25)
+    $ (|* gain 1.2)
+    $ someCyclesBy period (within (0.625, 1) (const 
+      $ stack [ 
+        pan "~ ~ ~ ~ ~ [1 ~] ~ ~" # pad4
+        , kickFill $ pan "~ ~ ~ ~ ~ [~ 1?] 1*2? 1*2?" # pad3 ]))
+    $ stack [
+    (|+ note 0) $ synthMute $ iter 8 $ struct "1(3,8)" $ pad1 --synth1
+    , (|+ note 0) $ synthMute $ ((3/16) ~>) $ iter 8 $ struct "1(3,8)" $ pad2 -- synth2
+    , hatMute $ plyWith plies (hatPlyFunc) $ slow (plies/denom) $ fast 4 $ pad12 -- hat
+    , drumsMute $ plyWith plies (kickPlyFunc) $ slow (plies/denom) $ fast 4 $ pad3 -- kick
+    , synthMute $ ccn 35 # ccv synthUp
+    , synthMute $ ccn 36 # ccv synthUp
+    , synthMute $ ccn 40 # ccv synthDown
+    , synthMute $ ccn 41 # ccv synthDown
+    , scene 0
+    ] # s "midi" # cps (160/120/2) 
+
+    hush
+
+
+  d2 
+    $ g $ stack [
+      ccn 92 # ccv (discretise (1/8) $ shiftBy 33 $ choose [0,1]) # s "midi" # midichan 0
+      , slow 3.3 $ ccn 45 # ccv (discretise (1/4) $ shiftBy 8 $ choose [0,127]) # s "midi" # midichan 0
+      , slow 4.18 $ ccn 46 # ccv (range 0 127 $ shrand 7237) # s "midi" # midichan 0
+      , slow 2.58 $ ccn 47 # ccv (range 1 127 $ shrand 7337) # s "midi" # midichan 0
+    ]
+
+d2 silence
+
+hush

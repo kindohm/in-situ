@@ -1,0 +1,42 @@
+
+do 
+  let 
+    pat = "<4 2 4 2 1 1 1>" :: Pattern Double
+    period = 0
+    amb1Mute = id
+    amb2Mute = id
+    bassMute = g
+    drumsMute = g
+    snareMute = g
+    times = "<15 10 5 20>"
+    bassPlyFunc = ((|* legato 0.97) . (# note "[-36]"))
+    kickPlyFunc = (# gain 0.8)
+    hatPlyFunc = (# pad11)
+    bassLfoDepth = 0
+    bassLfoRate = 0
+    amb2LfoRate = 0
+    amb2LfoDepth = 0
+  d1 
+    $ (|* gain 1.1)
+    $ cpsDisc 0.25 1
+    $ (# cps pat)
+    $ someCyclesBy period (within (0.5,1) (const $ struct "~ 1" $ pad4))
+    $ stack [
+        amb1Mute $ slow 4 $ pad6 
+        , amb2Mute $ slow 4.1 $ pad5
+        , bassMute $ plyWith ((times/) $ pat) bassPlyFunc $ pad1 # legato 1
+        , drumsMute $ plyWith ((times/) $ pat) kickPlyFunc $ pad3
+        , drumsMute $ plyWith ((times/) $ pat) hatPlyFunc $ pad12
+        , snareMute $ (4 ~>) $ slow 4 $ pad2
+        , bassMute $ ccn 35 # ccv bassLfoDepth
+        , bassMute $ ccn 36 # ccv bassLfoRate
+        , amb2Mute $ ccn 40 # ccv amb2LfoRate
+        , amb2Mute $ ccn 41 # ccv amb2LfoDepth
+        , randcat [ normDelay ]
+        , fast 8 $ scene (randcat [0])
+    ]
+    # rytm
+
+    d2 silence
+
+    hush

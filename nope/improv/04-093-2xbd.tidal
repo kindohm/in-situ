@@ -1,7 +1,7 @@
 
 
 do 
-  let pat = "<2 4 2 4 4 6 2 1 1>"
+  let pat = "<2 4 2 4 4 6 2 1 1>" :: Pattern Double
       times = "<10 15 20>"
       plyFunc = (# gain 0.7)
       period = 0.4

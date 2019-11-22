@@ -1,0 +1,21 @@
+
+do 
+  let plies = (slow 2 $ "<2 3 5>") :: Pattern (Ratio Integer)
+      denom = "<16 16>" :: Pattern (Ratio Integer)
+  d1 
+    $ (|* gain 1.2)
+    $ stack [
+      g $ slow (discretise 1 $ choose [1,1.5,2,3,4]) 
+        $ (|+ note (shiftBy 899 $ choose [0,-12,-1,-13]))
+        $ (|+ note "-24") $ midichan 0 # legato 1
+      , g $ (|+ note "-24") 
+        $ sometimesBy 0.5 (stutWith (shiftBy 4 $ choose [2,2,3,4]) (0.0625) (|+ note (shiftBy 48 $ choose [1,-1]))) 
+        $ pan (randcat ["1(<3 3 5>,8,<0 3 2 1>)"]) # midichan 1
+      , sometimesBy 0 (within (0.875,1) (const $ pan "~ ~ ~ [~ ~ ~ 1]" # pad4))
+        $ shift
+        $ sometimesBy 0 (within (0.5,0.625) (const $ pan "~ 1" # pad4)) 
+          $ plyWith plies (# gain 0.7) $ slow (plies/denom) $ pad3
+      , g $ rarely (# pad12) $ plyWith plies (# gain 0.7) $ slow (plies/denom) $ pad11
+    ] # s "midi" # cps (160/120/2)
+
+    hush

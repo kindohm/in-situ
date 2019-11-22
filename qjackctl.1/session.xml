@@ -1,0 +1,88 @@
+<!DOCTYPE qjackctlSession>
+<session name="qjackctl">
+ <client name="Calf Studio Gear" uuid="2">
+  <command>calfjackhost --load ${SESSION_DIR}/rack.xml --session-id 2</command>
+  <port name="Automation MIDI In" type="in"/>
+  <port name="multibandcompressor In #1" type="in">
+   <connect client="system" port="capture_1"/>
+   <connect client="SuperCollider" port="out_1"/>
+  </port>
+  <port name="multibandcompressor In #2" type="in">
+   <connect client="system" port="capture_2"/>
+   <connect client="SuperCollider" port="out_2"/>
+  </port>
+  <port name="multibandcompressor Out #1" type="out">
+   <connect client="Calf Studio Gear" port="exciter In #1"/>
+  </port>
+  <port name="multibandcompressor Out #2" type="out">
+   <connect client="Calf Studio Gear" port="exciter In #2"/>
+  </port>
+  <port name="limiter In #1" type="in">
+   <connect client="Calf Studio Gear" port="exciter Out #1"/>
+  </port>
+  <port name="limiter In #2" type="in">
+   <connect client="Calf Studio Gear" port="exciter Out #2"/>
+  </port>
+  <port name="limiter Out #1" type="out">
+   <connect client="system" port="playback_1"/>
+  </port>
+  <port name="limiter Out #2" type="out">
+   <connect client="system" port="playback_2"/>
+  </port>
+  <port name="exciter In #1" type="in">
+   <connect client="Calf Studio Gear" port="multibandcompressor Out #1"/>
+  </port>
+  <port name="exciter In #2" type="in">
+   <connect client="Calf Studio Gear" port="multibandcompressor Out #2"/>
+  </port>
+  <port name="exciter Out #1" type="out">
+   <connect client="Calf Studio Gear" port="limiter In #1"/>
+  </port>
+  <port name="exciter Out #2" type="out">
+   <connect client="Calf Studio Gear" port="limiter In #2"/>
+  </port>
+ </client>
+ <client name="system">
+  <port name="capture_1" type="out">
+   <connect client="Calf Studio Gear" port="multibandcompressor In #1"/>
+  </port>
+  <port name="capture_2" type="out">
+   <connect client="Calf Studio Gear" port="multibandcompressor In #2"/>
+  </port>
+  <port name="playback_1" type="in">
+   <connect client="Calf Studio Gear" port="limiter Out #1"/>
+  </port>
+  <port name="playback_2" type="in">
+   <connect client="Calf Studio Gear" port="limiter Out #2"/>
+  </port>
+  <port name="playback_3" type="in"/>
+  <port name="playback_4" type="in"/>
+  <port name="midi_capture_1" type="out"/>
+  <port name="midi_playback_1" type="in"/>
+  <port name="midi_capture_2" type="out"/>
+  <port name="midi_playback_2" type="in"/>
+  <port name="midi_playback_7" type="in"/>
+  <port name="midi_playback_8" type="in"/>
+  <port name="midi_playback_9" type="in"/>
+  <port name="midi_playback_10" type="in"/>
+  <port name="midi_playback_11" type="in"/>
+  <port name="midi_playback_12" type="in"/>
+  <port name="midi_capture_5" type="out"/>
+  <port name="midi_capture_6" type="out"/>
+  <port name="midi_capture_7" type="out"/>
+  <port name="midi_capture_8" type="out"/>
+  <port name="midi_capture_9" type="out"/>
+  <port name="midi_capture_10" type="out"/>
+ </client>
+ <client name="SuperCollider">
+  <port name="out_1" type="out">
+   <connect client="Calf Studio Gear" port="multibandcompressor In #1"/>
+  </port>
+  <port name="out_2" type="out">
+   <connect client="Calf Studio Gear" port="multibandcompressor In #2"/>
+  </port>
+  <port name="out_3" type="out"/>
+  <port name="out_4" type="out"/>
+ </client>
+</session>
+
