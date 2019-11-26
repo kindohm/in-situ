@@ -23,6 +23,11 @@ s.waitForBoot {
 	~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
 
 };
-s.latency = 0.3;
+s.latency = 0;
 );
 
+
+	MIDIClient.init;
+	~midiOut = MIDIOut.newByName("Scarlett 2i4 USB", "Scarlett 2i4 USB");
+	~midiOut.latency = 0.5;
+	~dirt.soundLibrary.addMIDI(\midi, ~midiOut);

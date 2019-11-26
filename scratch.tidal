@@ -52,3 +52,65 @@ p "s2"
 
 
   hush
+
+do 
+  let plies = (slow 2 $ "<3 5 6 7>") :: Pattern (Ratio Integer)
+      denom = "[8 16]/16"
+  d1 
+    $ (|* gain 1.2)
+    $ cpsTri 0.5 1.25 3
+    $ cpsDisc 0.5 1.5
+    $ stack [
+      off (0.0625*3) id $ fast 2 $ note "[0,10,14]" # midichan 14
+      , slow 4 $ ccn 1 # ccv (range 20 95 $ slow 20 rand) # midichan 14
+      , slow 4 $ ccn 2 # ccv (range 0 80 $ slow 21 rand) # midichan 14
+      , slow 4 $ ccn 3 # ccv (range 0 127 $ slow 22 rand) # midichan 14
+      , g $ slow (slow 2 $ "<1 4%3 2 8%3 4 12%3>") $ 
+          (|+ note (discretise (1/4) $ slow 37.1 $ choose [0,-12])) 
+            $ (|+ note "8") $ (# note "[0,-1]") $ note "0*16" # midichan 13
+      , slow 4 $ ccn 1 # ccv (range 64 64 $ slow 20 rand) # midichan 13
+      , slow 4 $ ccn 2 # ccv (range 5 115 $ slow 21 rand) # midichan 13
+      , slow 4 $ ccn 3 # ccv (range 0 127 $ slow 22 rand) # midichan 13
+      , slow 4 $ ccn 4 # ccv (range 0 127 $ slow 23 rand) # midichan 13
+      , slow 4 $ ccn 5 # ccv (range 33 127 $ slow 24 rand) # midichan 13
+      , within (0.5,0.625) (const $ pan "~ 1" # pad4) 
+          $ plyWith plies (# gain 0.8) $ slow (plies/denom) $ superimpose (# pad11) $ pad3
+    ] # s "midi" # cps (160/120/2)
+
+    hush
+
+    , slow (discretise (1/16) $ slow 8311 $ choose [1,(4/3),2,(8/3),4,(12/3)] ) $ 
+    (|+ note (discretise (1/4) $ slow 37.1 $ choose [0,-12])) 
+      $ (|+ note "8") $ (# note "[0,-1]") $ note "0*16" # midichan 13
+
+
+
+do 
+  let plies = "<15 10 20 5>"
+      denom = "<16 8 12>"
+      pat = "<2.5 1 1.5 1 0.5>"
+  d1 
+    $ (|* gain 1.2)
+    $ cpsDisc 0.5 1.5
+    $ someCyclesBy 0.2 rev
+    $ shift
+    $ someCyclesBy 0.7 (within (0.75,1) (const $ pan "~ ~ ~ 1" # pad4 # s "midi"))
+    $ stack [
+        plyWith plies (|* gain 0.96) 
+          $ slow (plies/denom)
+          $ pad3 
+      , plyWith plies ((# gain 0.8) . (# pad11)) $ slow (plies/denom) $ pad12
+      , (|+ note (shiftBy 489 $ choose [0,12,2,-10])) $ pad1
+      , degradeBy 0.3 $ shiftBy 44 $ pan "1*8" # pad7 # gain (range 0.7 1 $ shrand 71)
+      , slow 1.15 $ pad8
+    ] # s "midi" # cps (pat)
+
+    hush
+
+    d1 
+  $ stack [
+    pad1
+    , (|+ note 2) $ pad2
+    , (|+ note 4) $ pad5
+    , (|+ note "-5") $ (|+ note 4) $ pad6
+  ] # s "midi" # cps (160/120/2)
