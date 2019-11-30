@@ -1,30 +1,29 @@
 
 
 do 
-  let pat = "<2 4 2 4 4 6 2 1 1>"
-      times = "<10 15 20>"
-      plyFunc = (# gain 0.7)
-      period = 0.4
-      superKick = "<0 0 1 1 1 1>"
-      superHat = "<0 1 0 1 1>"
-      muteKick = id
-      muteHat = id
-      synthFilter = (range 20 80 $ slow 30 sine)
-      bendUp = (range 64 127 $ slow 25 sine)
-      bendDown = (range 64 127 $ slow 35 sine)
-      kickHold = (shiftBy 33 $ choose [0,127])
-      revFreq = 0.3
+  let pat = "<2 4 3 2 1 1 1 2 5>"
+      times = "<5 15 10 20>"
+      plyFunc = (# gain 0.8)
+      period = 0
+      superKick = "<1>"
+      superHat =  "<1>"
+      muteKick = g
+      muteHat = g
+      muteSynth = g
+      synthFilter = (range 0 70 $ slow 30 sine)
+      bendUp = (range 0 127 $ slow 25 sine)
+      bendDown = (range 0 127 $ slow 35 sine)
+      kickHold = (discretise 1 $ shiftBy 33 $ choose [0,0,127,127])
+      revFreq = 0.4
   d1  
-    $ g 
-    $ cpsTri 0.5 1.25 3
-    $ cpsDisc 0.75 1.25
+    $ (# cps 0.4)
     $ (# cps (pat * 0.5))
     $ (|* gain 1.2) 
     $ someCyclesBy revFreq rev
     $ shift
     $ someCyclesBy period (within (0.5,1) (const $ struct "~ 1" $ pad8))
     $ stack [ 
-      g $ (|+ note (discretise (1/2) $ shiftBy 489 $ choose [0,-12,-24])) 
+      muteSynth $ (|+ note (discretise (1/2) $ shiftBy 489 $ choose [0])) 
         $ (# gain 0.8) $ plyWith ((times/) $ pat) plyFunc $ superimpose (# pad2) $ pad1 -- notes
       , muteKick $ plyWith ((times/) $ pat) plyFunc $ every superKick (superimpose (# pad4)) $ pad3 -- kicks
       , muteHat $ plyWith ((times/) $ pat) plyFunc $ every superHat (superimpose (# pad12)) $ pad11 -- hats
@@ -33,19 +32,34 @@ do
       , fast 4 $ ccn 35 # ccv bendUp
       , fast 4 $ ccn 36 # ccv bendDown
       , fast 4 $ ccn 37 # ccv kickHold
-      , normDelay
-      , scene (randcat [0,1,2])
+      , randcat [normDelay]
+      , slow 0.5 $ scene (randcat [0,1,2])
+      , slow 2 $ pad6
+      , g $ slow 1.2 $ pad9
+      , g $ slow 1.25 $ pad5
       ] 
       # rytm
+
+d2 silence
+
+  d2 $ fast 2 $ unfollowed
+
+d2 $ patton
+
+hush
+
+      d2 silence
+
   d2 -- out
-    $ stack [
-      g $ (|+ note (shiftBy 489 $ choose [0,12,2,-10])) $ pad6
+    $ g $ stack [
+      (|+ note (shiftBy 489 $ choose [0,12,2,-10])) $ pad6
       , pad9 # cps 0.45
       , slow 1.105 $ pad5
     ] # rytm 
 
+hush
 
-  d2
+d2
     $ stack [
       ccn 92 # ccv "< 2>" # s "midi" # midichan 0
       , slow 3.3 $ ccn 45 # ccv (discretise (1/8) $ shiftBy 8 $ choose [0,127]) # s "midi" # midichan 0

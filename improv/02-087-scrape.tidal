@@ -1,41 +1,38 @@
 
 do 
   let 
-    pat = "<4 2 4 2 1 1 1>"
-    period = 0.8
-    amb1Mute = id
-    amb2Mute = id
-    bassMute = g
-    drumsMute = id
-    snareMute = id
-    times = "<15 10 5 20>"
-    bassPlyFunc = ((|* legato 0.97) . (# note "[-36]"))
-    kickPlyFunc = (# gain 0.8)
+    pat = "<4 2 4 2 1 1 1 1>"
+    period = 0
+    amb1Mute = g
+    amb2Mute = g
+    transitionMute = g
+    drumsMute = g
+    snareMute = g
+    times = "<5 5 10>"
+    kickPlyFunc = (# gain 0.85)
     hatPlyFunc = (# pad11)
-    bassLfoDepth = 0
-    bassLfoRate = 0
-    amb2LfoRate = 0
-    amb2LfoDepth = 0
+    bassLfoDepth = (range 0 127 $ slow 13 sine)
+    bassLfoRate = (range 0 127 $ slow 10 sine)
+    amb2LfoRate = (range 0 127 $ slow 11 sine)
+    amb2LfoDepth = (range 0 127 $ slow 12 sine)
   d1 
     $ (|* gain 1.1)
-    $ cpsDisc 0.25 1
-    $ (# cps pat)
+    $ (# cps pat )
     $ someCyclesBy period (within (0.5,1) (const $ struct "~ 1" $ pad4))
     $ stack [
         amb1Mute $ slow 4 $ pad6 
         , amb2Mute $ slow 4.1 $ pad5
-        , bassMute $ plyWith ((times/) $ pat) bassPlyFunc $ pad1 # legato 1
+        , transitionMute $ pad1
         , drumsMute $ plyWith ((times/) $ pat) kickPlyFunc $ pad3
         , drumsMute $ plyWith ((times/) $ pat) hatPlyFunc $ pad12
         , snareMute $ (4 ~>) $ slow 4 $ pad2
-        , bassMute $ ccn 35 # ccv bassLfoDepth
-        , bassMute $ ccn 36 # ccv bassLfoRate
         , amb2Mute $ ccn 40 # ccv amb2LfoRate
         , amb2Mute $ ccn 41 # ccv amb2LfoDepth
-        , randcat [ normDelay, normDelay, normDelay, randDelay ]
-        , slow 4 $ scene (randcat [0])
+        , randcat [ normDelay ]
+        , slow 3 $ scene (randcat [0])
     ]
     # rytm
+  d2 $ fast 2 $ unfollowed 
 
     d2 silence
 

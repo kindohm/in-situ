@@ -1,19 +1,34 @@
 
 
 do 
-  let plies = "<10 10 15 10 20>"
+  let plies = "<25 10 15 20>"
       pat = "<1 1.5 1 2 0.75 1>"
+      synth1Lfo = (range 0 127 $ slow 10 tri)
+      synth2Lfo = (range 0 127 $ slow 11 tri)
   d1
     $ (|* gain 1.2)
-    $ cpsDisc 0.8 0.8
+    $ cpsDisc 0.5 1.5
+    $ someCyclesBy 0 rev
     $ stack [
-      slow 8 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad1
-      , slow 7.23234 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad2
-      , someCyclesBy 0.3 rev $ plyWith ((plies/) $ pat) (|* gain 0.95) $ randcat [pad3,pad4,pad7,pad8] 
-      , plyWith ((plies/) $ pat) ((# pad11) . (|* gain 0.95)) $ pad12
-      , scene 0
+      -- synths
+      g $ slow 8 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad1
+      , g $ slow 7.23234 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad2
+      , ccn 35 # ccv synth1Lfo
+      , ccn 36 # ccv synth2Lfo
+      -- drums
+      , g $ plyWith ((plies/) $ pat) (# gain 0.8) $ randcat [pad3, pad4, pad7, pad8] 
+      -- hats
+      , g $ plyWith ((plies/) $ pat) ((# pad11) . (# gain 0.8)) $ pad12
+      , slow 3 $ scene 0
       , normDelay
     ] # s "midi" # cps pat
+  d2
+    $ (|* gain 1.1)
+    $ stack [
+      slow 4 $ pad6 
+    ]
+
+d1 silence
 
 hush
 

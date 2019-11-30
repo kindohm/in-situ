@@ -114,3 +114,67 @@ do
     , (|+ note 4) $ pad5
     , (|+ note "-5") $ (|+ note 4) $ pad6
   ] # s "midi" # cps (160/120/2)
+
+
+
+  d1 $ s "bd*8" # speed "<1 2 3+>"
+
+  hush
+
+
+  d1
+    $ stack [
+      jux (slow 1.021 . (# speed 0.94)) 
+        $ s "pattonfull" # begin 0.57 # end 0.65 # speed 0.95
+        # hpf 1000
+        # lpf 10000
+    ] # cps 0.5
+
+
+
+
+amb pad 6
+    tun -12
+    fin 59
+    br 24
+    smp 87
+    sta 8
+    end 3 
+    lop yes 
+    lev 100 
+
+    hpf 41
+    
+    decay 126
+    del + rev 
+    vol 91
+
+    spd 13
+    mul 4 
+    dst start 
+    random 
+    dep 54 
+
+amb pad 5
+  tun -23 
+  fin 9
+  br 56
+  smp 77
+  sta 72 
+  end 11 
+  lev 100
+
+  pk type 
+  117
+  9 res  
+
+  dec 126 
+  amp 83
+
+
+  spd 38 
+  mul 4 
+  saw 
+  dep 18
+
+  

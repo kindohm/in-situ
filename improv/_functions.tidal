@@ -134,3 +134,9 @@ let unfollowed =
                   , percMute $ degradeBy 0.3 $ shift 
                     $ pan "1*16" # midichan (shiftBy 9 $ choose [6,7]) # note "-24" # gain (range 0.7 1 $ shrand 74)
                 ] # s "midi" # cps (160/120/2)                  
+    patton = stack [
+                  jux (slow 1.021 . (# speed 0.94)) 
+                    $ s "pattonfull" # begin 0.57 # end 0.65 # speed 0.95
+                    # hpf 1000
+                    # lpf 10000
+                ] # cps 0.5
