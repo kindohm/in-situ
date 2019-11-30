@@ -25,6 +25,7 @@ do
         , muteDrums $ plyWith (plies * mult1) drumFunc $ slow (plies/denom) $ fast denom $ pad3 --drums
         , muteHats $ plyWith (plies * mult2) hatFunc $ slow (plies/denom) $ fast denom $ pad12 --hats
         , randDelay
+        , scene 0
       ] # cps (125/120/2) # rytm
   d2 $ fast 2 $ unfollowed
 

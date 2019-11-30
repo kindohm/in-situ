@@ -13,6 +13,7 @@ s.options.numInputBusChannels = 0;
 s.waitForBoot {
 	~dirt = SuperDirt(2, s);
 	~dirt.loadSoundFiles("~/code/in-situ/samples/*");
+	~dirt.loadSoundFiles("~/studio/tidal-samples/tracks/shared/*");
 
 	s.sync;
 	~dirt.start(57120, [0, 2]);
@@ -27,7 +28,3 @@ s.latency = 0;
 );
 
 
-	MIDIClient.init;
-	~midiOut = MIDIOut.newByName("Scarlett 2i4 USB", "Scarlett 2i4 USB");
-	~midiOut.latency = 0.5;
-	~dirt.soundLibrary.addMIDI(\midi, ~midiOut);

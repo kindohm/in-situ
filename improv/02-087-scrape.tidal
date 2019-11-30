@@ -33,7 +33,7 @@ do
         , amb2Mute $ ccn 40 # ccv amb2LfoRate
         , amb2Mute $ ccn 41 # ccv amb2LfoDepth
         , randcat [ normDelay, normDelay, normDelay, randDelay ]
-        , fast 8 $ scene (randcat [0,1,2])
+        , slow 4 $ scene (randcat [0])
     ]
     # rytm
 

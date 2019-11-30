@@ -1,0 +1,28 @@
+do 
+  let plies = "<15 10 20 5>"
+      denom = "<16 8 12>"
+      pat = "<2.5 1 1.5 1 0.5>"
+  d1 
+    $ g $ (|* gain 1.2)
+    $ cpsDisc 0.5 1.5
+    $ someCyclesBy 0.2 rev
+    $ shift
+    $ someCyclesBy 0 (within (0.75,1) (const $ pan "~ ~ ~ 1" # pad4 # s "midi"))
+    $ stack [
+        plyWith plies (|* gain 0.96) 
+          $ slow (plies/denom)
+          $ pad3 
+      , g $ plyWith plies ((# gain 0.8) . (# pad11)) $ slow (plies/denom) $ pad12
+      , g $ (|+ note (shiftBy 489 $ choose [0,12,2,-10])) $ pad6
+      , g $ (|+ note (shiftBy 489 $ choose [0,0,2,-10])) $ plyWith 2 id $ pad2
+      , g $ degradeBy 0.3 $ shiftBy 44 $ pan "1*8" # pad7 # gain (range 0.7 1 $ shrand 71)
+      , g $ slow 1.5 $ pad8
+      , normDelay
+      , scene (slow 4 $ "<0>")
+    ] # s "midi" # cps (pat)
+  d2 $ fast 2 $ unfollowed
+
+d1 silence
+
+
+    hush

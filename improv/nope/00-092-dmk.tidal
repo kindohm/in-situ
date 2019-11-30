@@ -11,7 +11,7 @@ do
     $ (# cps (0.7 * timePat))
     $ someCyclesBy 0.9 (within (0.65,0.85) (const $ gain "~ ~ ~ 1" # s "midi" # midichan 1 # note "-24"))
     $ stack [
-      g $ plyWith ((times/) $ timePat) ((|* legato 0.95) . (# gain 0.9)) $ note "-24" # legato 0.95 --synth
+      plyWith ((times/) $ timePat) ((|* legato 0.95) . (# gain 0.9)) $ note "-24" # legato 0.95 --synth
       , ccn "74*5" # ccv (range 90 127 $ slow 9 $ tri) -- filter freq
       , ccn "10*10" # ccv (range 0 127 $ shrand 7711) -- pan
       , ccn "80*5" # ccv (range 1 120 $ slow 14 tri) -- decay
@@ -21,8 +21,8 @@ do
       , plyWith ((times/) $ timePat) (plyFunc . (# midichan 10)) $ midichan 11 # note "-24" -- hats
       , (3 ~>) $ slow 5 $ (|+ note "-24") $ midichan 4 # note (scale "ritusen" "{0 1 -1 2 -2 6 3}%1") --bg1
       , (13 ~>) $ slow 4.9 $ (|+ note "-24") $ midichan 5 # note (scale "ritusen" "{0 1 -1 2 -2 6 3}%1") --bg2
-      , fast 7.3 $ scene (randcat [0,1,2])
-      , randDelay
+      , scene (slow 4 $ "<0 1 2>")
+      , randcat [randDelay, normDelay, normDelay, normDelay]
     ] # s "midi" 
 
 

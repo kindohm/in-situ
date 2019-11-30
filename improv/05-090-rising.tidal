@@ -3,19 +3,17 @@
 do 
   let plies = (slow 2 $ "<3 4 5 7>") :: Pattern (Ratio Integer)
       denom = 4
-      period = 0.4
+      period = 0
       hatPlyFunc = (# pad11)
       kickPlyFunc = (# gain 0.8)
       synthUp = 0
       synthDown = 0
       synthMute = id 
-      hatMute = id
-      drumsMute = id
-      kickFill = id
+      hatMute = g
+      drumsMute = g
+      kickFill = g
   d1 
     $ (|* gain 1.2)
-    $ cpsTri 0.25 1.25 3
-    $ cpsDisc 0.25 1.7
     $ someCyclesBy period (within (0.625, 1) (const 
       $ stack [ 
         pan "~ ~ ~ ~ ~ [1 ~] ~ ~" # pad4
@@ -31,6 +29,7 @@ do
     , synthMute $ ccn 41 # ccv synthDown
     , scene 0
     ] # s "midi" # cps (160/120/2) 
+  d2 $ g $ unfollowed
 
     hush
 
