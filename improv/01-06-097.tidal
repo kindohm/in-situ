@@ -1,14 +1,12 @@
 
 
 do 
-  let plies = "<25 10 15 20>"
+  let plies = "<10 20 15>"
       pat = "<1 1.5 1 2 0.75 1>"
       synth1Lfo = (range 0 127 $ slow 10 tri)
       synth2Lfo = (range 0 127 $ slow 11 tri)
   d1
     $ (|* gain 1.2)
-    $ cpsDisc 0.5 1.5
-    $ someCyclesBy 0 rev
     $ stack [
       -- synths
       g $ slow 8 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad1
@@ -19,10 +17,10 @@ do
       , g $ plyWith ((plies/) $ pat) (# gain 0.8) $ randcat [pad3, pad4, pad7, pad8] 
       -- hats
       , g $ plyWith ((plies/) $ pat) ((# pad11) . (# gain 0.8)) $ pad12
-      , slow 3 $ scene 0
-      , normDelay
+      , slow 1 $ scene (randcat[0])
+      , randcat [normDelay]
     ] # s "midi" # cps pat
-  d2
+  d2 -- trans
     $ (|* gain 1.1)
     $ stack [
       slow 4 $ pad6 

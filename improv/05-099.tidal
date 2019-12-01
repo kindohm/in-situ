@@ -1,0 +1,48 @@
+do 
+  let plies = "<5 10 15>"
+      denom = "<8 16 8 12>"
+      pat = "<2.5 1 1.5 1 0.5 0.5>"
+  d1 
+    $ (|* gain 1.2)
+    $ cpsDisc 0.5 1.5
+    $ someCyclesBy 0.3 rev
+    $ shift
+    $ someCyclesBy 0.4 (within (0.75,1) (const $ pan "~ ~ ~ 1" # pad4 # s "midi"))
+    $ stack [
+        plyWith plies (# gain 0.75) 
+          $ slow (plies/denom)
+          $ pad3           
+      -- hat
+      , plyWith plies ((# gain 0.8) . (# pad11)) $ slow (plies/denom) $ pad12
+      -- pad
+      , (|+ note (shiftBy 489 $ choose [0,12,2,-10])) $ pad6
+      -- synth 2
+      , (|+ note (shiftBy 489 $ choose [0,-12,2,-10])) $ plyWith 2 id $ pad2
+      -- perc
+      , degradeBy 0.3 $ shiftBy 44 $ pan "1*8" # pad7 # gain (range 0.7 1 $ shrand 71)
+      -- anchor
+      , slow 1.5 $ pad8
+      , randcat [randDelay]
+      , scene (slow 3 $ "<2 1 0>")
+    ] # s "midi" # cps (pat)
+
+hush
+
+d2 silence
+
+  d2 -- in / out
+    $ stack [
+      g $ (|+ note (shiftBy 489 $ choose [0,12,2,-10])) $ pad6
+      , g $ pad9 # cps 0.45
+      , g $ slow 1.105 $ pad5
+      , fast 2 $ unfollowed
+    ] # rytm 
+
+hush
+
+  d2 $ g $ fast 2 $ unfollowed
+
+d1 silence
+
+
+    hush

@@ -1,20 +1,20 @@
 
 do 
   let 
-    pat = "<4 2 4 2 1 1 1 1>"
+    pat = "<4 2 4 3 1 1 1 1 >"
     period = 0
     amb1Mute = g
-    amb2Mute = g
+    amb2Mute = id
     transitionMute = g
     drumsMute = g
     snareMute = g
-    times = "<5 5 10>"
-    kickPlyFunc = (# gain 0.85)
+    times = "<5 10 7 15>"
+    kickPlyFunc = (# gain 0.8)
     hatPlyFunc = (# pad11)
-    bassLfoDepth = (range 0 127 $ slow 13 sine)
-    bassLfoRate = (range 0 127 $ slow 10 sine)
-    amb2LfoRate = (range 0 127 $ slow 11 sine)
-    amb2LfoDepth = (range 0 127 $ slow 12 sine)
+    bassLfoDepth = (range 0 127 $ slow 10 tri)
+    bassLfoRate = 0
+    amb2LfoRate = (range 0 0 $ slow 10 tri)
+    amb2LfoDepth = (range 0 0 $ slow 11 tri)
   d1 
     $ (|* gain 1.1)
     $ (# cps pat )
@@ -29,10 +29,13 @@ do
         , amb2Mute $ ccn 40 # ccv amb2LfoRate
         , amb2Mute $ ccn 41 # ccv amb2LfoDepth
         , randcat [ normDelay ]
-        , slow 3 $ scene (randcat [0])
+        , slow 2 $ scene (randcat [0])
     ]
     # rytm
-  d2 $ fast 2 $ unfollowed 
+
+    d1 silence
+
+  d2 $ unfollowed # cps (160/120/2)
 
     d2 silence
 

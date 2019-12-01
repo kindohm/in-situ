@@ -1,20 +1,19 @@
 hush
 
 do 
-  let plies = (slow 2 $ "<7 5 8 5 9>") :: Pattern (Ratio Integer)
-      denom = (slow 1 $ "<3 3 3 2 4 3 4.5 5>") :: Pattern (Ratio Integer)
-      period = 0.4
+  let plies = (slow 2 $ "<7 3 5 9>") :: Pattern (Ratio Integer)
+      denom = (slow 1 $ "<2 2 2 4 4 4 4 3 3>") :: Pattern (Ratio Integer)
+      period = 0.5
       muteDrums = id
       muteHats = id
       mult1 = "<2 2 2>"
       mult2 = "<2 2 2>"
-      drumFunc = (# gain 0.8)
-      hatFunc = ((# pad11) . (# gain 0.9))
-      revOften = 0.3
+      drumFunc = (|* gain 0.97)
+      hatFunc = ((# pad11) . (|* gain 0.96))
+      revOften = 0.4
   d1 
-    $ g
+      $ g
       $ (|* gain 1.2)
-      $ cpsDisc 1 1.5
       $ someCyclesBy period (within (0.8,0.99) (const 
         $ stack [ 
           pan "~ ~ ~ ~ 1" # ccn 7 # ccv 0 # midichan 15 # s "midi" 
@@ -26,10 +25,10 @@ do
         plyWith (plies) id $ ccn 7 # ccv 100 # midichan 15 --harmor something
         , muteDrums $ plyWith (plies * mult1) drumFunc $ slow (plies/denom) $ fast denom $ pad3 --drums
         , muteHats $ plyWith (plies * mult2) hatFunc $ slow (plies/denom) $ fast denom $ pad12 --hats
-        , randcat [randDelay]
-        , scene (shiftBy 4 $ randcat [0,1,2,0])
+        , randcat [randDelay, randDelay]
+        , slow 3 $ scene (shiftBy 4 $ randcat [0,1,2])
       ] # cps (125/120/2) # rytm
-  d2 $ fast 2.5 $ unfollowed
+  d2 $ fast 2 $ unfollowed
 
 
 hush
