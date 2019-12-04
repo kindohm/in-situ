@@ -36,7 +36,9 @@ let
                       , slow 3.1 $ ccn 47 # ccv (range 0 127 $ shrand 19988) ] # s "midi"
   normDelay = stack [ ccn 45 # ccv 0, ccn 46 # ccv 0, ccn 47 # ccv 0 ] # s "midi"
   scene x = ccn 92 # ccv x
-
+  replicator text1 = [putStr (text1) | x <- replicate 500 text1]
+  flood text2 = sequence_(replicator text2)
+  
 let unfollowed = 
                   (|* gain 1.1)
                   $ slow 8 $ stack [

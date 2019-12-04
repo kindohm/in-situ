@@ -192,3 +192,13 @@ do
 
     hush
 
+
+
+    d1
+      $ cpsDisc 0.5 2
+      $ shift
+      $ stack [
+        plyWith "<10 15 5 20 10 15>" (|* gain 0.95) $ pad3
+      ] # rytm # cps (160/120/2)
+
+      hush
