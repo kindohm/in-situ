@@ -1,63 +1,57 @@
 -- 097 --
 do 
-  let plies = "<5 15 10 20>"
-      pat = "<1 1.5 2 1 2.5 3>"
-      synth1Lfo = (range 0 127 $ slow 10 tri)
-      synth2Lfo = (range 0 127 $ slow 11 tri)
+  let plies = "<5>"
+      pat = "<1 1.5 1 2 0.75 1>"
+      synth1Lfo = 0
+      synth2Lfo = 0
   d1
     $ (|* gain 1.2)
-    $ cpsTri 0.9 1.25 4
-    $ cpsDisc 0.5 1.5
-    $ someCyclesBy 0.3 rev
-    $ shift
     $ stack [
       -- synths
-      g $ slow 7 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad1
-      , g $ slow 7.23234 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad2
+      slow 8 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad1
+      , slow 7.23234 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad2
       , ccn 35 # ccv synth1Lfo
       , ccn 36 # ccv synth2Lfo
       -- drums
-      , g $ plyWith ((plies/) $ pat) (|* gain 0.97) $ randcat [pad3, pad7, pad8, pad4] 
+      , g $ plyWith ((plies/) $ pat) (# gain 0.8) $ randcat [pad3] 
       -- hats
       , g $ plyWith ((plies/) $ pat) ((# pad11) . (# gain 0.8)) $ pad12
-      , scene (slow 1 $ "<0 0>")
-      , randcat [normDelay]
+      , scene 0
+      , normDelay
     ] # s "midi" # cps pat
   d2 -- trans
+    $ g
     $ (|* gain 1.1)
     $ stack [
       slow 4 $ pad6 
     ]
 
 
-hush
 
 -- 087 --
 do 
   let 
     pat = "<4 2 3 1 2 1 1 0.5>"
     period = 0
-    amb1Mute = g
-    amb2Mute = id
+    amb1Mute = id
+    amb2Mute = g
     transitionMute = g
     drumsMute = g
     snareMute = g
-    times = "<5 10 5>"
+    times = "<5>"
     kickPlyFunc = (# gain 0.8)
     hatPlyFunc = (# pad11)
     bassLfoDepth = 0
     bassLfoRate = 0
-    amb2LfoRate = (range 0 127 $ slow 10 tri)
-    amb2LfoDepth = (range 0 127 $ slow 11 tri)
+    amb2LfoRate = 0
+    amb2LfoDepth = 0
   d1 
     $ (|* gain 1.1)
-    $ cpsDisc 1 1
     $ (# cps pat )
-    $ shift
     $ someCyclesBy period (within (0.5,1) (const $ struct "~ 1" $ pad4))
     $ stack [
         amb1Mute $ slow 4 $ pad6 
-        , amb2Mute $ slow 5.1 $ pad5
+        , amb2Mute $ slow 4.1 $ pad5
         , transitionMute $ pad1
         , drumsMute $ plyWith ((times/) $ pat) kickPlyFunc $ pad3
         , drumsMute $ plyWith ((times/) $ pat) hatPlyFunc $ pad12
@@ -65,21 +59,17 @@ do
         , amb2Mute $ ccn 40 # ccv amb2LfoRate
         , amb2Mute $ ccn 41 # ccv amb2LfoDepth
         , randcat [ normDelay ]
-        , slow 1 $ scene (randcat [0])
+        , slow 2 $ scene (randcat [0])
     ]
     # rytm
 
-    hush
-
 -- unfollowed --    
-d2 $ fast 2 $ unfollowed  # cps (160/120/2)
-
-hush
+d2 $ fast 2 $ unfollowed 
 
 -- 093 --
 do 
-  let pat = "<2 3 2 3 2 4 2 1>"
-      times = "<10 15 10 20>"
+  let pat = "<2 3 2 3 2 1 4>"
+      times = "<10 5>"
       plyFunc = (# gain 0.75)
       period = 0
       superKick = "<0>"
@@ -88,10 +78,10 @@ do
       muteHat = g
       muteSynth = id
       synthFilter = (range 20 80 $ slow 30 sine)
-      bendUp = (range 0 0 $ slow 10 tri)
-      bendDown = (range 0 0 $ slow 11 tri)
-      kickHold = (discretise 1 $ shiftBy 3 $ choose [0,0,127])
-      revFreq = 0.3
+      bendUp = 0
+      bendDown = 0
+      kickHold = 0
+      revFreq = 0
   d1  
     $ (# cps (pat * 0.5))
     $ (|* gain 1.2) 
@@ -110,8 +100,8 @@ do
       , randcat [normDelay]
       , scene (randcat [0])
       , g $ slow 2 $ pad6 -- out
-      , slow 1.47 $ pad9 -- out
-      , slow 1.52 $ pad5 --out
+      , g $ slow 1.47 $ pad9 -- out
+      , g $ slow 1.52 $ pad5 --out
       ] # rytm
 
 
@@ -125,24 +115,20 @@ do
 
 d1 silence 
 
-hush
-
 -- 096 cant --
 
 do
   let 
-    plies = (slow 2 $ "<3 3 5 7 9>") :: Pattern (Ratio Integer)
-    denom = ((discretise (1/2) $ slow 389 $ choose [4,6,8,12])) :: Pattern (Ratio Integer)
+    plies = (slow 2 $ "<3 3 5>") :: Pattern (Ratio Integer)
+    denom = ((discretise (1/8) $ slow 389 $ choose [4])) :: Pattern (Ratio Integer)
     period = 0
-    kickMute = g
-    kickPlyFunc= (# gain 0.8)
+    kickMute = id
+    kickPlyFunc= (|* gain 0.9)
     hatPlyFunc = (# pad11)
     hatMute = g
     rollMute = g
-    percMute = id
+    percMute = g
   d1
-    $ cpsTri 0.5 2 4
-    $ cpsDisc 1 1
     $ (|* gain 1.2)
     $ someCyclesBy period (within (0.625,1) (const $ s "~ [~ midi ~ ~]" # note "-24" # midichan 3))
     $ stack [
@@ -155,14 +141,12 @@ do
         $ (# midichan (shiftBy 89 $ choose [6,7])) 
         $ plyWith plies id $ slow (plies/denom) $ fast 2 $ pan 1
         # note "-24" 
-      , randcat [normDelay]
-      , fast 3 $ scene (slow 1 $ choose [2,0])
+      , normDelay
+      , scene 0
     ] # s "midi" # cps (160/120/2)
   d2 $ cantsynth
 
-  d1 silence
-
-hush
+  d2 silence
 
 -- 099 --
 do 
@@ -191,4 +175,3 @@ do
     ] # s "midi" # cps pat
 
     hush
-
