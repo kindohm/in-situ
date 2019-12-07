@@ -23,6 +23,7 @@ s.waitForBoot {
 	~midiOut.latency = 0;
 	~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
 
+
 };
 s.latency = 0;
 );

@@ -10,7 +10,7 @@ do
     $ stack [
       -- synths
       g $ slow 8 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad1
-      , g $ slow 7.23234 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad2
+      , g $ slow 7.9782379239478 $ fast (shiftBy 3 $ choose [1,1.1..2]) $ (# note "-24") $ pad2
       , ccn 35 # ccv synth1Lfo
       , ccn 36 # ccv synth2Lfo
       -- drums
