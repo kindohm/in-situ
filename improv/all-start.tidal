@@ -27,7 +27,6 @@ do
     ]
 
 
-
 -- 087 --
 do 
   let 
@@ -67,6 +66,7 @@ do
 -- unfollowed --    
 d2 $ fast 2 $ unfollowed 
 
+hush
 -- 093 --
 do 
   let pat = "<2 3 2 3 2 1 4>"
