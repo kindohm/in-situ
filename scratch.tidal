@@ -307,3 +307,109 @@ d2
       # s "midi" # midichan 15     
 
 hush
+
+
+do 
+  let plies = "<3 4 5>"
+      denom = "<8 8 8>"
+  d1 
+    $ (|* gain 1.2)
+    $ someCyclesBy 0.4 (within (0.75,1) (const $ pan "~ ~ ~ 1" # pad4 # s "midi"))
+    $ stack [
+      plyWith plies (# gain 0.8) $ slow (plies/denom) $ pad3
+      , plyWith plies ((# gain 0.8) . (# pad11)) $ slow (plies/denom) $ pad12
+    ] # s "midi" # cps (160/120/2)
+
+    hush
+
+d1 
+  $ (|* gain 1.2)
+  $ degradeBy 0.7 
+  $ foldEvery [2,3] (0.25 ~>)
+  $ sometimes (ply "2")
+  $ shift
+  $ stack [
+    s "kit03(<5 3>,16,<0 7 4 10>)" # cut 1 # gain 0.9
+    , roll 0.4 $ s "~ kit03" # n 1 ]
+  # cps (160/120/2)
+
+d2
+  $ (|* gain 1.2)
+  $ degradeBy 0.5
+  $ shift
+  $ sometimes (|* speed "-1")
+  $ shift
+  $ s "stark(<3 7 5>,16,<0 5 3 4>)" 
+  # cut 2
+  # begin 0 
+  # speed (range 0.5 2 $ shrand 8) 
+  # n (choose [1,2..9])
+  # hpf 100
+
+d3 
+  $ (|* gain 1.2)
+  $ every 3 (|* speed "-1")
+  $ someCyclesBy 0.2 g
+  $ slow 32
+  $ striate' 512 (1/100)
+  $ s "[trip]" 
+  # n 0
+  # lpf (range 6000 10000 $ shrand 389)
+  # hpf 90
+  # speed 1
+
+
+  hush
+
+d4 
+  $ fast (segment 1 $ shiftBy 3 $ choose [0.5,0.6..1.5])
+  $ stack [
+    fast (segment 1 $ shiftBy 1000 $ choose [0.5,0.6..1.5]) $ ccn 1 # ccv (range 0 127 $ shrand 101) 
+    , fast (segment 1 $ shiftBy 1000 $ choose [0.5,0.6..1.5]) $ ccn 2 # ccv (range 0 127 $ shrand 102) 
+    , fast (segment 1 $ shiftBy 10001 $ choose [0.5,0.6..1.5]) $ ccn 3 # ccv (range 0 127 $ shrand 103) 
+    , fast (segment 1 $ shiftBy 10002 $ choose [0.5,0.6..1.5]) $ ccn 4 # ccv (range 0 127 $ shrand 104) 
+    , fast (segment 1 $ shiftBy 10003 $ choose [0.5,0.6..1.5]) $ ccn 5 # ccv (range 0 127 $ shrand 105) 
+    , fast (segment 1 $ shiftBy 10004 $ choose [0.5,0.6..1.5]) $ ccn 6 # ccv (range 0 127 $ shrand 106) 
+    , fast (segment 1 $ shiftBy 10005 $ choose [0.5,0.6..1.5]) $ ccn 7 # ccv (range 0 127 $ shrand 107) 
+    , fast (segment 1 $ shiftBy 10006 $ choose [0.5,0.6..1.5]) $ ccn 8 # ccv (range 0 127 $ shrand 108) 
+    , fast (segment 1 $ shiftBy 10007 $ choose [0.5,0.6..1.5]) $ ccn 9 # ccv (range 0 127 $ shrand 109) 
+    , fast (segment 1 $ shiftBy 10008 $ choose [0.5,0.6..1.5]) $ ccn 10 # ccv (range 0 127 $ shrand 1010) 
+    , fast (segment 1 $ shiftBy 10009 $ choose [0.5,0.6..1.5]) $ ccn 11 # ccv (range 0 127 $ shrand 1011) 
+    , fast (segment 1 $ shiftBy 100011 $ choose [0.5,0.6..1.5]) $ ccn 12 # ccv (range 0 127 $ shrand 1012) 
+    , fast (segment 1 $ shiftBy 100012 $ choose [0.5,0.6..1.5]) $ ccn 13 # ccv (range 0 127 $ shrand 1013) 
+    , fast (segment 1 $ shiftBy 100013 $ choose [0.5,0.6..1.5]) $ ccn 14 # ccv (range 0 127 $ shrand 1014) 
+    , fast (segment 1 $ shiftBy 100014 $ choose [0.5,0.6..1.5]) $ ccn 15 # ccv (range 0 127 $ shrand 1015) 
+    , fast (segment 1 $ shiftBy 100015 $ choose [0.5,0.6..1.5]) $ ccn 16 # ccv (range 0 127 $ shrand 1016) 
+    , fast (segment 1 $ shiftBy 100016 $ choose [0.5,0.6..1.5]) $ ccn 17 # ccv (range 0 127 $ shrand 1017) 
+    , fast (segment 1 $ shiftBy 100017 $ choose [0.5,0.6..1.5]) $ ccn 18 # ccv (range 0 127 $ shrand 1018) 
+    , fast (segment 1 $ shiftBy 100018 $ choose [0.5,0.6..1.5]) $ ccn 19 # ccv (range 0 127 $ shrand 1019) 
+    , fast (segment 1 $ shiftBy 100019 $ choose [0.5,0.6..1.5]) $ ccn 20 # ccv (range 0 127 $ shrand 1020) 
+  ] #  s "midi" # midichan 15
+
+
+
+
+hush
+
+let sometimesr x f p = sometimesBy x f $ (1 <~) $ p
+    cyclesr x f p = someCyclesBy x f $ (1 <~) $ p
+
+do 
+  let plies = "<3 5 7 9 11>"
+      denom = 16
+  d1 
+    $ (|* gain 1.2)
+    $ someCyclesBy 0.5 (within (0.75,1) (const $ pan "~ ~ ~ 1" # pad4 # s "midi"))
+    $ shift
+    $ stack [
+      sometimes (off 0.0625 id) 
+        $ shift $ plyWith plies g $ slow (plies/denom) $ pad3
+      , shift $ plyWith plies (# pad11) $ slow (plies/denom) $ pad12 # gain 1
+      , (|+ note "-24") $ slow 2 $ note (scale "ritusen" "{0 3 1 2 -1}%1") # midichan 0 # legato 0.5
+      , degradeBy 0.5 $ pan "1*16" # pad5
+      , fast 16 $ ccn 102 # ccv (range 80 127 $ shrand 101) # midichan 4
+      , fast 16 $ ccn 74 # ccv (range 20 120 $ shrand 102) # midichan 4
+      , fast 16 $ ccn 80 # ccv (range 5 50 $ shrand 103) # midichan 4
+    ] # s "midi" # cps (160/120/2)
+
+  hush
